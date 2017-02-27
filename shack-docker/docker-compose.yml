@@ -1,0 +1,41 @@
+version: "2"
+
+services:
+
+  swagger:
+    build: 
+      context: ./shack-swagger
+    image: shack-swagger
+    # open ports for tomcat and remote debugging
+    ports:
+      - "9080:8080"
+    restart: always
+
+  database:
+    build:
+      context: ./shack-database
+    image: shack-database
+    # set default mysql root password, change as needed
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    # Expose port 3306 to host. Not for the application but
+    # handy to inspect the database from the host machine.
+    ports:
+      - "3306:3306" 
+    restart: always
+
+  webserver:
+    build: 
+      context: ./shack-tomcat
+    image: shack-tomcat
+    # mount point for application in tomcat
+    volumes:
+      - ../registrationservice/target/shack:/usr/local/tomcat/webapps/shack
+    links:
+      - database:shack-database
+    # open ports for tomcat and remote debugging
+    ports:
+      - "8080:8080" 
+      - "8000:8000"
+    restart: always
+

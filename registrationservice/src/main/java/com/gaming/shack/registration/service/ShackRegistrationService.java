@@ -1,0 +1,41 @@
+/*
+ * 
+ */
+package com.gaming.shack.registration.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.gaming.shack.core.exception.ShackDAOException;
+import com.gaming.shack.core.exception.ShackServiceException;
+import com.gaming.shack.data.model.UserDTO;
+import com.gaming.shack.registration.dao.IShackResgistrationDao;
+// TODO: Auto-generated Javadoc
+
+/**
+ * The Class ShackRegistrationService.
+ */
+@Service
+public class ShackRegistrationService implements IShackRegistrationService {
+	
+	/** The shack resgistration dao. */
+	@Autowired
+	private IShackResgistrationDao shackResgistrationDao;
+
+
+	/* (non-Javadoc)
+	 * @see com.gaming.shack.registration.service.IShackRegistrationService#findAllUsers()
+	 */
+	@Override
+	public List<UserDTO> findAllUsers() throws ShackServiceException {
+		// TODO Auto-generated method stub
+		try {
+			return shackResgistrationDao.findAllUser();
+		} catch (ShackDAOException e) {
+			throw new ShackServiceException("101","exception in find all users");
+		}
+	}
+
+}

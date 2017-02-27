@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="ShackConfiguration" status="warn"
+	strict="true" schema="Log4J-V2.0.xsd">
+
+	<!-- status: log4j2 internal logging (not for the app) pass below param 
+		to make all loggers async logger -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector -->
+
+
+	<Properties>
+		<Property name="SHACK_HOME">/shack</Property>
+		<Property name="filename-trace">${env:SHACK_HOME}/logs/shacktrace.log
+		</Property>
+		<Property name="filename-error">${env:SHACK_HOME}/logs/shackerror.log
+		</Property>
+		<Property name="filename-info">${env:SHACK_HOME}/logs/shackinfo.log
+		</Property>
+		<Property name="filename-warn">${env:SHACK_HOME}/logs/shackwarn.log
+		</Property>
+		<Property name="filename-stats">${env:SHACK_HOME}/logs/shackstats.log
+		</Property>
+		<Property name="filename-hibernate">${env:SHACK_HOME}/logs/shackhibernate.log
+		</Property>
+		<Property name="filename-quartz">${env:SHACK_HOME}/logs/shackquartz.log
+		</Property>
+		<Property name="filename-spring">${env:SHACK_HOME}/logs/shackspring.log
+		</Property>
+		<Property name="pattern">%x %d{yyyy-MM-dd HH:mm:ss:SSS} %c{1} [%p] %m%n
+		</Property>
+		<Property name="pattern1">%d{yyyy-MM-dd HH:mm:ss:SSS} %c{1} [%p] %m%n
+		</Property>
+
+	</Properties>
+
+	<Appenders>
+		<!-- the standard-console-appender -->
+		<Console name="appender-Console-all" target="SYSTEM_OUT">
+			<PatternLayout pattern="${pattern}" />
+
+		</Console>
+
+		<RollingRandomAccessFile name="appender-trace"
+			fileName="${filename-trace}" filePattern="${filename-trace}.%i"
+			immediateFlush="false" append="true">
+			<PatternLayout pattern="${pattern}" />
+			<Policies>
+
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="min" max="20" />
+			<Filters>
+				<ThresholdFilter level="info" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="warn" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="error" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="fatal" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="trace" onMatch="ACCEPT"
+					onMismatch="DENY" />
+			</Filters>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="appender-error"
+			fileName="${filename-error}" filePattern="${filename-error}.%i"
+			immediateFlush="false" append="true">
+			<PatternLayout pattern="${pattern}" />
+			<Policies>
+
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="min" max="5" />
+			<ThresholdFilter level="error" onMatch="ACCEPT"
+				onMismatch="DENY" />
+		</RollingRandomAccessFile>
+
+
+		<RollingRandomAccessFile name="appender-info"
+			fileName="${filename-info}" filePattern="${filename-info}.%i"
+			immediateFlush="false" append="true">
+			<PatternLayout pattern="${pattern}" />
+			<Policies>
+
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="min" max="5" />
+
+			<Filters>
+				<ThresholdFilter level="warn" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="error" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="fatal" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="info" onMatch="ACCEPT"
+					onMismatch="DENY" />
+			</Filters>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="appender-warn"
+			fileName="${filename-warn}" filePattern="${filename-warn}.%i"
+			immediateFlush="false" append="true">
+			<PatternLayout pattern="${pattern}" />
+			<Policies>
+
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="min" max="5" />
+
+			<Filters>
+				<ThresholdFilter level="error" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="fatal" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="warn" onMatch="ACCEPT"
+					onMismatch="DENY" />
+			</Filters>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="appender-stats"
+			fileName="${filename-stats}" filePattern="${filename-stats}.%i"
+			immediateFlush="false" append="true">
+			<PatternLayout pattern="${pattern}" />
+			<Policies>
+
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="min" max="5" />
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="appender-hibernate"
+			fileName="${filename-hibernate}" filePattern="${filename-hibernate}.%i"
+			immediateFlush="false" append="true">
+			<PatternLayout pattern="${pattern1}" />
+			<Policies>
+
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="min" max="5" />
+
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="appender-spring"
+			fileName="${filename-spring}" filePattern="${filename-spring}.%i"
+			immediateFlush="false" append="true">
+			<PatternLayout pattern="${pattern1}" />
+			<Policies>
+
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="min" max="5" />
+
+		</RollingRandomAccessFile>
+		
+
+	</Appenders>
+
+
+	<Loggers>
+		<!-- Every configuration must have a root logger. If one is not configured 
+			the default root LoggerConfig is ERROR with Console appender attached. -->
+		<Root level="DEBUG">
+			<AppenderRef ref="appender-Console-all" level="all" />
+			<AppenderRef ref="appender-trace" level="debug" />
+			<AppenderRef ref="appender-error" level="ERROR" />
+			<AppenderRef ref="appender-info" level="INFO" />
+			<AppenderRef ref="appender-warn" level="WARN" />
+		</Root>
+
+
+
+		<Logger name="stats" additivity="false">
+			<AppenderRef ref="appender-stats" level="INFO" />
+		</Logger>
+
+		<Logger name="org.hibernate" level="trace" additivity="false">
+			<AppenderRef ref="appender-hibernate" />
+
+		</Logger>
+
+		<Logger name="org.springframework" level="error" additivity="false">
+			<AppenderRef ref="appender-spring" />
+		</Logger>
+
+		<Logger name="org.springframework.transaction" level="error"
+			additivity="false">
+			<AppenderRef ref="appender-spring" />
+		</Logger>
+	</Loggers>
+</Configuration>

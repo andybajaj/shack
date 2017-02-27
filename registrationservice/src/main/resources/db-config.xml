@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-4.2.xsd  
+     					http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd  
+     					http://www.springframework.org/schema/aop 
+                        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd 
+     					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+
+
+
+	
+
+	<bean id="shackLibEntityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="SHACK_PU" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan">
+	            <list>
+                        <value>com.gaming.shack.data.entity</value>
+                    
+                    </list>
+		</property>
+		<property name="mappingResources">
+		  <list>
+                        <value>META-INF/orm-shack.xml</value>
+                         <value>META-INF/orm-shack-registration.xml</value>
+                    
+                    </list>
+		</property>
+		
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="showSql" value="false" />
+				<property name="generateDdl" value="false" />
+			</bean>
+		</property>
+		<property name="jpaProperties">
+         <props>
+            <prop key="hibernate.hbm2ddl.auto">none</prop>
+            <prop key="hibernate.cache.use_second_level_cache">false</prop>
+            <prop key="hibernate.jdbc.use_scrollable_resultset">false</prop>
+            <prop key="hibernate.jdbc.fetch_size">${jdbc.fetch.size}</prop>
+				<prop key="hibernate.jdbc.batch_size">${jdbc.batch.size}</prop>
+             <prop key="hibernate.show_sql">true</prop>
+              <prop key="hibernate.format_sql">true</prop>
+              <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+         </props>
+      </property>
+      </bean>
+		
+
+</beans> 
