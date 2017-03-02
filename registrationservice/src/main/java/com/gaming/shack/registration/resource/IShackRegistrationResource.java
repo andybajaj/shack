@@ -12,7 +12,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import com.gaming.shack.core.exception.ShackResourceException;
+import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.model.ItemList;
+import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
 
 // TODO: Auto-generated Javadoc
@@ -35,5 +37,16 @@ public interface IShackRegistrationResource {
 	@GET
 	@Path("/findallusers")
 	public ItemList<UserDTO> findAllUsers(@Context UriInfo ui) throws ShackResourceException;
+	
+	/**
+	 * The resource service level method for adding the member
+	 * @param memberProfile
+	 * @return
+	 * @throws ShackResourceException
+	 */
+	@GET
+	@Path("/addmembermaster")
+	public ItemList<MemberProfileDTO> addMemberMaster(MemberProfileDTO memberProfile) throws ShackResourceException ; 
+	
 
 }
