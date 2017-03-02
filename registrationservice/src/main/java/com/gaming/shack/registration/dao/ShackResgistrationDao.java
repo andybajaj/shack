@@ -4,6 +4,7 @@
 
 package com.gaming.shack.registration.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -21,10 +22,13 @@ import com.gaming.shack.data.model.UserDTO;
  * The Class HoldingRefDataDao.
  */
 @Repository
-public class ShackResgistrationDao extends ShackBaseDao<User> implements IShackResgistrationDao {
+public class ShackResgistrationDao extends ShackBaseDao<User , Serializable> implements IShackResgistrationDao {
 
 	
-
+	public ShackResgistrationDao() {
+		super(User.class) ;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.gaming.shack.registration.dao.IShackResgistrationDao#findAllUser()
 	 */

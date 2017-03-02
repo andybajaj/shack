@@ -5,6 +5,8 @@ package com.gaming.shack.core.utils;
 
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 
 
 
@@ -13,8 +15,7 @@ import java.util.Map;
  * The Class PxyThreadLocal.
  */
 public class ShackThreadLocal extends ThreadLocal<ShackContext> {
-	
-	
+			
 	/** The cache thread local. */
 	private static ThreadLocal<ShackContext> cacheThreadLocal =
 		    new ThreadLocal<ShackContext>() {
@@ -49,7 +50,7 @@ public class ShackThreadLocal extends ThreadLocal<ShackContext> {
 	 *            the key
 	 * @return the context value
 	 */
-	public static String getContextValue(String key) {
+	public static Object getContextValue(String key) {
 		ShackContext context = (ShackContext)cacheThreadLocal.get();
 		return context.getContext().get(key);
 	}
@@ -59,7 +60,7 @@ public class ShackThreadLocal extends ThreadLocal<ShackContext> {
 	 * 
 	 * @return the context
 	 */
-	public static Map<String,String> getContext() {
+	public static Map<String,Object> getContext() {
 		ShackContext context = (ShackContext)cacheThreadLocal.get();
 		return context.getContext();
 	}
@@ -72,7 +73,7 @@ public class ShackThreadLocal extends ThreadLocal<ShackContext> {
 	 * @param value
 	 *            the value
 	 */
-	public static void setContextValue(String key, String value) {
+	public static void setContextValue(String key, Object value) {
 		ShackContext context = (ShackContext)cacheThreadLocal.get();
 		context.getContext().put(key, value);
 	}
@@ -105,6 +106,5 @@ public class ShackThreadLocal extends ThreadLocal<ShackContext> {
 	 */
 	public static void removeValue() {
 		cacheThreadLocal.remove();
-	}
-	
+	}		
 }

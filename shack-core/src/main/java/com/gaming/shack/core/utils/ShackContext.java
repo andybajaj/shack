@@ -13,14 +13,14 @@ import java.util.Map;
 public class ShackContext {
 	
 	/** The context. */
-	private  Map<String,String> context = new LinkedHashMap<String,String>();
+	private  Map<String,Object> context = new LinkedHashMap<String,Object>();
 
 	/**
 	 * Gets the context.
 	 * 
 	 * @return the context
 	 */
-	public Map<String, String> getContext() {
+	public Map<String, Object> getContext() {
 		return context;
 	}
 
@@ -30,7 +30,7 @@ public class ShackContext {
 	 * @param context
 	 *            the context
 	 */
-	public void setContext(Map<String, String> context) {
+	public void setContext(Map<String, Object> context) {
 		this.context = context;
 	}
 
