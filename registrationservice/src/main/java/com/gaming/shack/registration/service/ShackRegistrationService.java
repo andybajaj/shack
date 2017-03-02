@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.gaming.shack.core.exception.ShackDAOException;
 import com.gaming.shack.core.exception.ShackServiceException;
+import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
 import com.gaming.shack.registration.dao.IShackResgistrationDao;
 // TODO: Auto-generated Javadoc
@@ -36,6 +37,13 @@ public class ShackRegistrationService implements IShackRegistrationService {
 		} catch (ShackDAOException e) {
 			throw new ShackServiceException("101","exception in find all users");
 		}
+	}
+
+
+	@Override
+	public MemberProfileDTO addMemberMaster(MemberProfileDTO memberProfile) throws ShackServiceException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
