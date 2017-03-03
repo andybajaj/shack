@@ -1,13 +1,12 @@
 package com.gaming.shack.registration.util;
 
-import java.util.Date;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import com.gaming.shack.core.constants.ShackResourceConstants;
+import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.core.utils.DateFormatterUtils;
-import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.MemberMaster;
-import com.gaming.shack.data.entity.registration.SiteMaster;
 import com.gaming.shack.data.model.MemberProfileDTO;
 
 /**
@@ -37,5 +36,16 @@ public class RegistrationHelper {
 		entity.setParentMemberID(memberProfile.getParentMemberId());
 		
 		return entity ;
+	}
+	
+	/**
+	 * 
+	 * @param memberProfile
+	 * @throws ShackValidationException
+	 */
+	public void validateMemberProfile(MemberProfileDTO memberProfile) throws ShackValidationException {
+		if (StringUtils.isEmpty(memberProfile.getFirstName())) {
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_ADD_MEMBER, ShackResourceConstants.ERROR_CODE_ADD_MEMBER_FIRST_NAME) ;
+		}
 	}
 }

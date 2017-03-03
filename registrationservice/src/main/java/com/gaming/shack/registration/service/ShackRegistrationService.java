@@ -5,12 +5,16 @@ package com.gaming.shack.registration.service;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gaming.shack.core.annotation.ShackRTX;
+import com.gaming.shack.core.constants.ShackResourceConstants;
 import com.gaming.shack.core.exception.ShackDAOException;
 import com.gaming.shack.core.exception.ShackServiceException;
+import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.entity.registration.SiteMaster;
@@ -28,6 +32,8 @@ import com.gaming.shack.registration.util.RegistrationHelper;
  */
 @Service
 public class ShackRegistrationService implements IShackRegistrationService {
+	
+	private static final Logger LOGGER = LogManager.getLogger(ShackRegistrationService.class);
 	
 	/** The shack resgistration dao. */
 	@Autowired
@@ -61,24 +67,35 @@ public class ShackRegistrationService implements IShackRegistrationService {
 
 	@Override
 	@ShackRTX
-	public MemberProfileDTO addMemberMaster(MemberProfileDTO memberProfile) throws ShackServiceException {
-		/**
-		 * The advanced validations will be added here
-		 */
-		SiteMaster siteMaster = siteMasterDAO.findById(memberProfile.getPreferredSite()) ;
-		
-		Channel channel = channelDAO.findById(memberProfile.getChannelId()) ;
-		
-		/**
-		 * Validate the channels and site before proceeding
-		 */
-		MemberMaster memberMaster = registrationhelper.createMemberMaster(memberProfile) ;
-		memberMaster.setSiteMaster(siteMaster);		
-		memberMaster.setChannel(channel);
-		
-		memberDAO.add(memberMaster);
-		
-		return memberProfile ;
+	public MemberProfileDTO addMemberMaster(MemberProfileDTO memberProfile) throws ShackValidationException , ShackServiceException {
+		try {
+			/**
+			 * The advanced validations will be added here
+			 */
+			registrationhelper.validateMemberProfile(memberProfile);
+			SiteMaster siteMaster = siteMasterDAO.findById(memberProfile.getPreferredSite()) ;
+			
+			Channel channel = channelDAO.findById(memberProfile.getChannelId()) ;
+			
+			/**
+			 * Validate the channels and site before proceeding
+			 */
+			MemberMaster memberMaster = registrationhelper.createMemberMaster(memberProfile) ;
+			memberMaster.setSiteMaster(siteMaster);		
+			memberMaster.setChannel(channel);
+			
+			memberDAO.add(memberMaster);
+			
+			return memberProfile ;
+			
+		} catch(ShackValidationException sve) {
+			LOGGER.error("Validation error occured in addMemberMaster" ,sve);
+			throw sve ;			
+		} catch(Exception e){
+			LOGGER.error("Error occured in addMemberMaster" ,e);
+			throw new ShackServiceException(ShackResourceConstants.ERROR_CODE_ADD_MEMBER,
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MSG, e);
+		}
 	}
 
 }

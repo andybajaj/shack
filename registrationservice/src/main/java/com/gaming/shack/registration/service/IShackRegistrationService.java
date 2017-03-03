@@ -6,6 +6,7 @@ package com.gaming.shack.registration.service;
 import java.util.List;
 
 import com.gaming.shack.core.exception.ShackServiceException;
+import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
 
@@ -29,7 +30,8 @@ public interface IShackRegistrationService {
 	 * @return
 	 * @throws ShackServiceException
 	 */
-	public MemberProfileDTO addMemberMaster(MemberProfileDTO memberProfile) throws ShackServiceException ; 
+	public MemberProfileDTO addMemberMaster(MemberProfileDTO memberProfile)
+			throws ShackValidationException, ShackServiceException; 
 	
 
 }

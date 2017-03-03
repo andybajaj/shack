@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import com.gaming.shack.core.exception.ShackResourceException;
+import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.core.model.ItemList;
 import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
@@ -46,7 +47,7 @@ public interface IShackRegistrationResource {
 	 */
 	@POST
 	@Path("/addmembermaster")
-	public ItemList<MemberProfileDTO> addMemberMaster(MemberProfileDTO memberProfile) throws ShackResourceException ; 
+	public ItemList<MemberProfileDTO> addMemberMaster(MemberProfileDTO memberProfile) throws ShackValidationException , ShackResourceException ; 
 	
 
 }
