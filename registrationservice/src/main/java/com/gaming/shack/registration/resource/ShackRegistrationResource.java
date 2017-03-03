@@ -18,8 +18,7 @@ import com.gaming.shack.core.model.ItemList;
 import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
 import com.gaming.shack.registration.service.IShackRegistrationService;
-
-// TODO: Auto-generated Javadoc
+ 
 /**
  * The Class ShackRegistrationResource.
  */
@@ -32,10 +31,7 @@ public class ShackRegistrationResource implements IShackRegistrationResource {
 	/** The holding ref data service. */
 	@Autowired
 	private IShackRegistrationService shackRegistrationService;
-
-	/* (non-Javadoc)
-	 * @see org.ithaka.cm.euler.resource.IEulerRefSourceResource#findExistingSources(javax.ws.rs.core.UriInfo)
-	 */
+	
 	@Override
 	public ItemList<UserDTO> findAllUsers(UriInfo ui) throws ShackResourceException {
 		try {
@@ -45,21 +41,41 @@ public class ShackRegistrationResource implements IShackRegistrationResource {
 			items.setItems(userDTOLst);
 			return items;
 		} catch (ShackServiceException e) {
-			LOGGER.error("101 : error occured in findAllUsers") ;
+			LOGGER.error("101 : error occured in findAllUsers" , e) ;
 			throw new ShackResourceException("101", "Error in findColsMapping");
 		}
 	}
 
 	@Override
+	/**
+	 * Tested the service with the following pay load and working
+	 * and data goign to table
+	 * {
+		  "firstName": "John",
+		  "lastName": "Smith",
+		  "middleName": "p",
+		  "nameTitle": "Mr.",
+		  "dateOfBirth": "1980-01-31",
+		  "emailId": "john.smith@john.com",
+		  "phoneNumberCountryCode": "",
+		  "phoneNumber": "9876543210",
+		  "preferredSite": 11,
+		  "membershipType": 1,
+		  "memberType": 1,
+		  "parentMemberId": 123,
+		  "leftHanded" : true,
+		  "channelId":18 
+		}
+	 */
 	public ItemList<MemberProfileDTO> addMemberMaster(MemberProfileDTO memberProfileIn) throws ShackResourceException {
 		try {
 			LOGGER.info("addMemberMaster api called");
 			MemberProfileDTO memberProfile = shackRegistrationService.addMemberMaster(memberProfileIn) ; 
 			ItemList<MemberProfileDTO> items = new ItemList<>();
-			items.setItems(memberProfileIn);
+			items.setItems(memberProfile);
 			return items ;
 		} catch(Exception e) {
-			LOGGER.error("101 : error occured in addMemberMaster") ;
+			LOGGER.error("101 : error occured in addMemberMaster" , e) ;
 			throw new ShackResourceException("101", "Error in addMemberMaster");
 		}
 	}

@@ -21,6 +21,9 @@ import com.gaming.shack.core.enums.DateFormatType;
  */
 public class DateFormatterUtils {
 	
+	/** The Constant DATE_FORMAT_YYYY_MM_DD. */
+	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
+	
 	/**
 	 * Format.
 	 *
@@ -92,5 +95,25 @@ public class DateFormatterUtils {
 	    return cal.getTime();
 	}
 	
+	/**
+	 * 
+	 * @param dateInput
+	 * @return
+	 */
+	public static Date toDate(String dateInput){
+		if (dateInput == null ) {
+			return null ;
+		}
+		
+		Date dateOutput=null;
+		try{
+			DateFormat formatter = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD);
+			dateOutput = formatter.parse(dateInput);
+		}catch(Exception pEx){
+			return null ;
+		}
+		
+		return dateOutput ;
+	}
 	    
 }

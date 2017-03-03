@@ -38,7 +38,12 @@ public class MemberProfileDTO implements Serializable {
 	private long parentMemberId ;
 	
 	private MemberDetailsDTO memberDetails ;
-
+	
+	/**
+	 * This will be moved to header later
+	 */
+	private long channelId ; 
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -168,6 +173,15 @@ public class MemberProfileDTO implements Serializable {
 
 	public void setParentMemberId(long paremtMemberId) {
 		this.parentMemberId = paremtMemberId;
+	}
+	
+	
+	public long getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(long channelId) {
+		this.channelId = channelId;
 	}
 
 	@Override
