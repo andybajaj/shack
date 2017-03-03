@@ -56,7 +56,7 @@ public class ShackRegistrationResource implements IShackRegistrationResource {
 			LOGGER.info("addMemberMaster api called");
 			MemberProfileDTO memberProfile = shackRegistrationService.addMemberMaster(memberProfileIn) ; 
 			ItemList<MemberProfileDTO> items = new ItemList<>();
-			items.setItems(memberProfile);
+			items.setItems(memberProfileIn);
 			return items ;
 		} catch(Exception e) {
 			LOGGER.error("101 : error occured in addMemberMaster") ;

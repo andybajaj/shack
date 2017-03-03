@@ -1,5 +1,6 @@
 package com.gaming.shack.data.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**

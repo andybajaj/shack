@@ -13,6 +13,7 @@ import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
 import com.gaming.shack.registration.dao.IShackResgistrationDao;
+import com.gaming.shack.registration.util.RegistrationHelper;
 // TODO: Auto-generated Javadoc
 
 /**
@@ -24,7 +25,9 @@ public class ShackRegistrationService implements IShackRegistrationService {
 	/** The shack resgistration dao. */
 	@Autowired
 	private IShackResgistrationDao shackResgistrationDao;
-
+	
+	@Autowired
+	RegistrationHelper registrationhelper ;
 
 	/* (non-Javadoc)
 	 * @see com.gaming.shack.registration.service.IShackRegistrationService#findAllUsers()

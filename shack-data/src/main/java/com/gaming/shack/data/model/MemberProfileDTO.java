@@ -1,8 +1,8 @@
 package com.gaming.shack.data.model;
 
-import java.util.Date;
+import java.io.Serializable;
 
-import com.gaming.shack.data.enums.MembershipType;
+import com.gaming.shack.data.enums.MemberType;
 
 /**
  * The JSON representation of the member profile 
@@ -10,24 +10,32 @@ import com.gaming.shack.data.enums.MembershipType;
  * @author shahnawf
  *
  */
-public class MemberProfileDTO {
+public class MemberProfileDTO implements Serializable {
+		
+	/**
+	 * 
+	 */
+	
+	private static final long serialVersionUID = -1466861230858686070L;
 	private String firstName ; 
 	private String lastName ; 
 	private String middleName ;
 	private String nameTitle ;
-	private Date dateOfBirth ;
+	private String dateOfBirth ;
 	private String emailId ;
 	private String phoneNumberCountryCode ;
 	private String phoneNumber ;
-	private boolean isLeftHanded ;
+	private boolean leftHanded ;
 	/**
 	 * The SMID
 	 */
 	private long preferredSite ; 
 	private long membershipType ; 
-	private MembershipType memberType ;
+	private int memberType ;
 	private String termConditionVersion ;
 	private String encodedPassword ; 
+	
+	private long parentMemberId ;
 	
 	private MemberDetailsDTO memberDetails ;
 
@@ -63,11 +71,11 @@ public class MemberProfileDTO {
 		this.nameTitle = nameTitle;
 	}
 
-	public Date getDateOfBirth() {
+	public String getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -95,12 +103,14 @@ public class MemberProfileDTO {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public boolean isLeftHanded() {
-		return isLeftHanded;
+	
+
+	public boolean getLeftHanded() {
+		return leftHanded;
 	}
 
-	public void setLeftHanded(boolean isLeftHanded) {
-		this.isLeftHanded = isLeftHanded;
+	public void setLeftHanded(boolean leftHanded) {
+		this.leftHanded = leftHanded;
 	}
 
 	public long getPreferredSite() {
@@ -119,11 +129,11 @@ public class MemberProfileDTO {
 		this.membershipType = membershipType;
 	}
 
-	public MembershipType getMemberType() {
+	public int getMemberType() {
 		return memberType;
 	}
 
-	public void setMemberType(MembershipType memberType) {
+	public void setMemberType(int memberType) {
 		this.memberType = memberType;
 	}
 
@@ -150,15 +160,25 @@ public class MemberProfileDTO {
 	public void setMemberDetails(MemberDetailsDTO memberDetails) {
 		this.memberDetails = memberDetails;
 	}
+	
+	
+	public long getParentMemberId() {
+		return parentMemberId;
+	}
+
+	public void setParentMemberId(long paremtMemberId) {
+		this.parentMemberId = paremtMemberId;
+	}
 
 	@Override
 	public String toString() {
 		return "MemberProfileDTO [firstName=" + firstName + ", lastName=" + lastName + ", middleName=" + middleName
 				+ ", nameTitle=" + nameTitle + ", dateOfBirth=" + dateOfBirth + ", emailId=" + emailId
 				+ ", phoneNumberCountryCode=" + phoneNumberCountryCode + ", phoneNumber=" + phoneNumber
-				+ ", isLeftHanded=" + isLeftHanded + ", preferredSite=" + preferredSite + ", membershipType="
+				+ ", isLeftHanded=" + leftHanded + ", preferredSite=" + preferredSite + ", membershipType="
 				+ membershipType + ", memberType=" + memberType + ", termConditionVersion=" + termConditionVersion
-				+ ", encodedPassword=" + encodedPassword + ", memberDetails=" + memberDetails + "]";
+				+ ", encodedPassword=" + encodedPassword + ", paremtMemberId=" + parentMemberId + ", memberDetails="
+				+ memberDetails + "]";
 	} 
 	
 	
