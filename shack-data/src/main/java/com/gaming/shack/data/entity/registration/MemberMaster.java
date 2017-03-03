@@ -89,7 +89,7 @@ public class MemberMaster implements Serializable {
 	private Timestamp updateDate;
 
 	//bi-directional many-to-one association to MemberMaster_AUD
-	@OneToMany(mappedBy="memberMaster"  , fetch = FetchType.EAGER, cascade = { CascadeType.ALL})
+	@OneToMany(mappedBy="memberMaster"  , fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
 	private List<MemberMaster_AUD> memberMasterAuds;
 
 	//bi-directional many-to-one association to Address
@@ -101,12 +101,12 @@ public class MemberMaster implements Serializable {
 	private List<MemberActivation> memberActivations;
 
 	//bi-directional many-to-one association to Channel
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL})
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
 	@JoinColumn(name="CLID"  ,referencedColumnName="CLID")
 	private Channel channel;
 
 	//bi-directional many-to-one association to SiteMaster
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL})
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
 	@JoinColumn(name="SMID" ,referencedColumnName="SMID")
 	private SiteMaster siteMaster;
 

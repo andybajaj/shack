@@ -65,7 +65,7 @@ public class MemberMasterTest {
 	@Rollback(false)
 	public void testAddMemberDAO() throws Exception {
 		MemberMaster member = new MemberMaster();
-		member.setMemberID(1003l);
+		member.setMemberID(1004l);
 		member.setNameTitle("Sz");
 		member.setGivenName("Shahnawaz");
 		member.setSurname("Fnu");
@@ -73,7 +73,7 @@ public class MemberMasterTest {
 		member.setChannel(getChannel());
 		member.setDateOfBirth(new Date());
 		member.setCreateBy("Shah");
-		member.setEmailaddress("snawaz760@yahoo.commm");
+		member.setEmailaddress("snawaz760@yahooo.commm");
 		member.setUpdateBy("Shah");
 		memberDAO.add(member);
 		// ShackThreadLocal.getEntityManager().getTransaction().commit();
@@ -103,7 +103,7 @@ public class MemberMasterTest {
 
 	private Channel getChannel() {
 		Channel channel = new Channel();
-		channel.setChannelID(10093l);
+		channel.setChannelID(10094l);
 		channel.setCreateBy("shah");
 		channel.setUpdateBy("Shah");
 		return channel;
