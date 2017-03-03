@@ -21,4 +21,9 @@ public class ShackResourceConstants {
 	public static final String ERROR_CODE_ADD_MEMBER_DOB = "Invalid date of birth" ;
 	public static final String ERROR_CODE_ADD_MEMBER_PREF_SITE = "Invalid Preferred Site" ;
 	public static final String ERROR_CODE_ADD_MEMBER_CHANNEL = "Invalid Channel" ;
+	public static final String ERROR_CODE_ADD_MEMBER_MEMBERSHIPTYPE = "Invalid membership type" ;
+	public static final String ERROR_CODE_ADD_MEMBER_MEMBERTYPE = "Invalid member type" ;
+	public static final String ERROR_CODE_ADD_MEMBER_MEMBERSHIPTYPE_NOT_DEFINED = "Membership type not defined in system" ;
+	public static final String ERROR_CODE_ADD_MEMBER_MEMBERTYPE_NOT_DEFINED = "Member type not defined in system" ;
+	
 }

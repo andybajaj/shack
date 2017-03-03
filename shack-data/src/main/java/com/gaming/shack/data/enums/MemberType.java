@@ -15,4 +15,9 @@ public enum MemberType {
 	MemberType(int typeValue) {
 		this.typeValue = typeValue ;
 	}
+	
+	public int getValue() {
+		return this.typeValue ;
+	}
+	
 }
