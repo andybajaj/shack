@@ -33,7 +33,9 @@ import com.gaming.shack.core.annotation.ShackRTX;
 import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.entity.registration.SiteMaster;
+import com.gaming.shack.registration.dao.IChannelDAO;
 import com.gaming.shack.registration.dao.IMemberMasterDAO;
+import com.gaming.shack.registration.dao.ISiteMasterDAO;
 
 /**
  * The test class for the member master
@@ -48,7 +50,13 @@ public class MemberMasterTest {
 
 	@Autowired
 	private IMemberMasterDAO<MemberMaster, Long> memberDAO;
-
+	
+	@Autowired
+	private ISiteMasterDAO<SiteMaster, Long> siteMasterDAO;
+	
+	@Autowired
+	private IChannelDAO<Channel, Long> channelDAO;
+	
 	/**
 	 * Sets the up.
 	 *
@@ -65,15 +73,25 @@ public class MemberMasterTest {
 	@Rollback(false)
 	public void testAddMemberDAO() throws Exception {
 		MemberMaster member = new MemberMaster();
-		member.setMemberID(1004l);
+		member.setMemberID(1007l);
 		member.setNameTitle("Sz");
 		member.setGivenName("Shahnawaz");
 		member.setSurname("Fnu");
-		member.setSiteMaster(getSiteMaster());
-		member.setChannel(getChannel());
+		
+		//member.setSiteMaster(getSiteMaster());
+		
+		SiteMaster siteMaster = siteMasterDAO.findById(11l) ;
+		member.setSiteMaster(siteMaster);
+		
+		//member.setChannel(getChannel());
+		
+		Channel channel = channelDAO.findById(18l) ; 
+		
+		member.setChannel(channel);
+		
 		member.setDateOfBirth(new Date());
 		member.setCreateBy("Shah");
-		member.setEmailaddress("snawaz760@yahooo.commm");
+		member.setEmailaddress("test7@yahoo.com");
 		member.setUpdateBy("Shah");
 		memberDAO.add(member);
 		// ShackThreadLocal.getEntityManager().getTransaction().commit();
@@ -103,7 +121,7 @@ public class MemberMasterTest {
 
 	private Channel getChannel() {
 		Channel channel = new Channel();
-		channel.setChannelID(10094l);
+		channel.setChannelID(10095l);
 		channel.setCreateBy("shah");
 		channel.setUpdateBy("Shah");
 		return channel;
