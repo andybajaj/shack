@@ -29,20 +29,22 @@ public class MemberProfileDTO implements Serializable {
 	/**
 	 * The SMID
 	 */
-	private long preferredSite ; 
-	private long membershipType ; 
-	private int memberType ;
+	private Long preferredSite ; 
+	private Long membershipType ; 
+	private Long memberType ;
 	private String termConditionVersion ;
 	private String encodedPassword ; 
 	
-	private long parentMemberId ;
+	private Long parentMemberId ;
+	
+	private Long memberId ; 
 	
 	private MemberDetailsDTO memberDetails ;
 	
 	/**
 	 * This will be moved to header later
 	 */
-	private long channelId ; 
+	private Long channelId ; 
 	
 	public String getFirstName() {
 		return firstName;
@@ -118,27 +120,27 @@ public class MemberProfileDTO implements Serializable {
 		this.leftHanded = leftHanded;
 	}
 
-	public long getPreferredSite() {
+	public Long getPreferredSite() {
 		return preferredSite;
 	}
 
-	public void setPreferredSite(long preferredSite) {
+	public void setPreferredSite(Long preferredSite) {
 		this.preferredSite = preferredSite;
 	}
 
-	public long getMembershipType() {
+	public Long getMembershipType() {
 		return membershipType;
 	}
 
-	public void setMembershipType(long membershipType) {
+	public void setMembershipType(Long membershipType) {
 		this.membershipType = membershipType;
 	}
 
-	public int getMemberType() {
+	public Long getMemberType() {
 		return memberType;
 	}
 
-	public void setMemberType(int memberType) {
+	public void setMemberType(Long memberType) {
 		this.memberType = memberType;
 	}
 
@@ -167,21 +169,30 @@ public class MemberProfileDTO implements Serializable {
 	}
 	
 	
-	public long getParentMemberId() {
+	public Long getParentMemberId() {
 		return parentMemberId;
 	}
 
-	public void setParentMemberId(long paremtMemberId) {
+	public void setParentMemberId(Long paremtMemberId) {
 		this.parentMemberId = paremtMemberId;
 	}
 	
 	
-	public long getChannelId() {
+	public Long getChannelId() {
 		return channelId;
 	}
 
-	public void setChannelId(long channelId) {
+	public void setChannelId(Long channelId) {
 		this.channelId = channelId;
+	}
+	
+	
+	public Long getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(Long memberId) {
+		this.memberId = memberId;
 	}
 
 	@Override
@@ -189,10 +200,10 @@ public class MemberProfileDTO implements Serializable {
 		return "MemberProfileDTO [firstName=" + firstName + ", lastName=" + lastName + ", middleName=" + middleName
 				+ ", nameTitle=" + nameTitle + ", dateOfBirth=" + dateOfBirth + ", emailId=" + emailId
 				+ ", phoneNumberCountryCode=" + phoneNumberCountryCode + ", phoneNumber=" + phoneNumber
-				+ ", isLeftHanded=" + leftHanded + ", preferredSite=" + preferredSite + ", membershipType="
+				+ ", leftHanded=" + leftHanded + ", preferredSite=" + preferredSite + ", membershipType="
 				+ membershipType + ", memberType=" + memberType + ", termConditionVersion=" + termConditionVersion
-				+ ", encodedPassword=" + encodedPassword + ", paremtMemberId=" + parentMemberId + ", memberDetails="
-				+ memberDetails + "]";
+				+ ", encodedPassword=" + encodedPassword + ", parentMemberId=" + parentMemberId + ", memberId="
+				+ memberId + ", memberDetails=" + memberDetails + ", channelId=" + channelId + "]";
 	} 
 	
 	

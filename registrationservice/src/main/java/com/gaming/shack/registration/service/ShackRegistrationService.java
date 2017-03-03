@@ -25,6 +25,7 @@ import com.gaming.shack.registration.dao.IMemberMasterDAO;
 import com.gaming.shack.registration.dao.IShackResgistrationDao;
 import com.gaming.shack.registration.dao.ISiteMasterDAO;
 import com.gaming.shack.registration.util.RegistrationHelper;
+import com.gaming.shack.registration.util.RegistrationValidationHelper;
 // TODO: Auto-generated Javadoc
 
 /**
@@ -49,21 +50,22 @@ public class ShackRegistrationService implements IShackRegistrationService {
 	private IChannelDAO<Channel, Long> channelDAO;
 	
 	@Autowired
-	RegistrationHelper registrationhelper ;
-
+	private RegistrationValidationHelper validationhelper;
+	
+	@Autowired
+	RegistrationHelper registrationHelper ;
+	
 	/* (non-Javadoc)
 	 * @see com.gaming.shack.registration.service.IShackRegistrationService#findAllUsers()
 	 */
 	@Override
 	public List<UserDTO> findAllUsers() throws ShackServiceException {
-		// TODO Auto-generated method stub
 		try {
 			return shackResgistrationDao.findAllUser();
 		} catch (ShackDAOException e) {
 			throw new ShackServiceException("101","exception in find all users");
 		}
 	}
-
 
 	@Override
 	@ShackRTX
@@ -72,15 +74,17 @@ public class ShackRegistrationService implements IShackRegistrationService {
 			/**
 			 * The advanced validations will be added here
 			 */
-			registrationhelper.validateMemberProfile(memberProfile);
-			SiteMaster siteMaster = siteMasterDAO.findById(memberProfile.getPreferredSite()) ;
+			validationhelper.validateMemberProfile(memberProfile);
 			
+			SiteMaster siteMaster = siteMasterDAO.findById(memberProfile.getPreferredSite()) ;
 			Channel channel = channelDAO.findById(memberProfile.getChannelId()) ;
 			
+			validationhelper.validateSiteAndChannel(siteMaster, channel);
 			/**
 			 * Validate the channels and site before proceeding
 			 */
-			MemberMaster memberMaster = registrationhelper.createMemberMaster(memberProfile) ;
+			MemberMaster memberMaster = registrationHelper.createMemberMaster(memberProfile) ;
+			
 			memberMaster.setSiteMaster(siteMaster);		
 			memberMaster.setChannel(channel);
 			
@@ -94,7 +98,7 @@ public class ShackRegistrationService implements IShackRegistrationService {
 		} catch(Exception e){
 			LOGGER.error("Error occured in addMemberMaster" ,e);
 			throw new ShackServiceException(ShackResourceConstants.ERROR_CODE_ADD_MEMBER,
-					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MSG, e);
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_CHANNEL, e);
 		}
 	}
 

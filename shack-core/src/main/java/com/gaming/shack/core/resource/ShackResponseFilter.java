@@ -19,12 +19,11 @@ import javax.ws.rs.ext.Provider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
 import com.gaming.shack.core.model.ItemList;
 import com.gaming.shack.core.model.ResponseStatus;
 import com.gaming.shack.core.model.SimpleResponse;
 import com.gaming.shack.core.utils.Log4ThreadContext;
-
-import io.swagger.models.Swagger;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -50,7 +49,7 @@ public class ShackResponseFilter implements ContainerResponseFilter {
 	 */
 	// @Override
 	@Override
-    @SuppressWarnings("unchecked")
+
 	public void filter(ContainerRequestContext inContext, ContainerResponseContext outContext) {
 		
 		LOGGER.info("response filter invoked");
@@ -71,9 +70,9 @@ public class ShackResponseFilter implements ContainerResponseFilter {
 			if(entity==null){
 				return;
 			}
-			if(entity instanceof Swagger){
+			/*if(entity instanceof Swagger){
 				return;
-			}
+			}*/
 			if(entity instanceof File){
 				return;
 			}
