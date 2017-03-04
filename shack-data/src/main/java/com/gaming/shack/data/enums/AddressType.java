@@ -6,8 +6,8 @@ package com.gaming.shack.data.enums;
  *
  */
 public enum AddressType {
-	MAIlING_ADDRESS("Mail") ,
-	BILLING_ADDRESS("Bill") ;
+	MAIL("Mail") ,
+	BILL("Bill") ;
 	
 	private String typeValue ;
 	
@@ -17,5 +17,9 @@ public enum AddressType {
 	
 	public String getTypeValue() {
 		return typeValue ;
+	}
+	
+	public String valueOf(){
+		return this.typeValue;
 	}
 }

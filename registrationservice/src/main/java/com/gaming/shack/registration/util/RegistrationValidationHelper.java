@@ -68,6 +68,16 @@ public class RegistrationValidationHelper {
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_CHANNEL);
 		}
 		
+		if (memberProfile.getTcTemplateId() == null || memberProfile.getTcTemplateId() <=0) {
+			throw new ShackValidationException(validationErrorCode,
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_CHANNEL);
+		}
+		
+		if (memberProfile.getCardBarCode() == null || memberProfile.getCardBarCode() <=0) {
+			throw new ShackValidationException(validationErrorCode,
+					ShackResourceConstants.ERROR_CODE_ADD_CARDBARCODE);
+		}
+		
 		validateChannel(memberProfile.getChannelId());
 		
 		validateMembership(memberProfile);		

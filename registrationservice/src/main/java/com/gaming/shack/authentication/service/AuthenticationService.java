@@ -55,7 +55,7 @@ public class AuthenticationService implements IAuthenticationService {
 			}
 
 			// 2. check member status and throw error
-			String memberStatus = member.getMemberStatus();
+			MemberStatusEnum memberStatus = member.getMemberStatus();
 			validateMemberStatus(memberStatus);
 
 			// Storing memberId for further processing
@@ -109,14 +109,14 @@ public class AuthenticationService implements IAuthenticationService {
 
 	}
 
-	private void validateMemberStatus(String memberStatus) throws ShackValidationException {
+	private void validateMemberStatus(MemberStatusEnum memberStatus) throws ShackValidationException {
 
 
-		if (StringUtils.isEmpty(memberStatus)) {
+		if (StringUtils.isEmpty(memberStatus.valueOf())) {
 			throw new ShackValidationException("101", "No valid member status found");
 		}
 
-		switch (MemberStatusEnum.toEnum(memberStatus)) {
+		switch (memberStatus) {
 		case PRE:
 			throw new ShackValidationException("102", "Member not registererd the online account");
 		case NEW:

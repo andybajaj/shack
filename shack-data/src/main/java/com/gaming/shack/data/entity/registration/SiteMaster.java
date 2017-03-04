@@ -40,10 +40,10 @@ public class SiteMaster implements Serializable {
 	private Timestamp createDate;
 
 	@Column(name="Latitude")
-	private float latitude;
+	private Float latitude;
 
 	@Column(name="Longitude")
-	private float longitude;
+	private Float longitude;
 
 	@Column(name="PostalCode")
 	private String postalCode;
@@ -120,19 +120,19 @@ public class SiteMaster implements Serializable {
 		this.createDate = createDate;
 	}
 
-	public float getLatitude() {
+	public Float getLatitude() {
 		return this.latitude;
 	}
 
-	public void setLatitude(float latitude) {
+	public void setLatitude(Float latitude) {
 		this.latitude = latitude;
 	}
 
-	public float getLongitude() {
+	public Float getLongitude() {
 		return this.longitude;
 	}
 
-	public void setLongitude(float longitude) {
+	public void setLongitude(Float longitude) {
 		this.longitude = longitude;
 	}
 

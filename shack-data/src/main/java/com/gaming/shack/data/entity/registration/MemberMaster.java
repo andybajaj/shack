@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +24,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.DynamicUpdate;
+
+import com.gaming.shack.data.enums.MemberStatusEnum;
 
 
 /**
@@ -66,7 +70,8 @@ public class MemberMaster implements Serializable {
 //	private Long membershipTypeID;
 
 	@Column(name="MemberStatus")
-	private String memberStatus;
+	@Enumerated(EnumType.STRING)
+	private MemberStatusEnum memberStatus;
 
 	@Column(name="MemberTypeID")
 	private Long memberTypeID;
@@ -91,7 +96,8 @@ public class MemberMaster implements Serializable {
 
 	@Column(name="Surname")
 	private String surname;
-
+	
+	@Column(name="TCTemplateID")
 	private Long TCTemplateID;
 
 	@Column(name="TelephoneCountryCode")
@@ -219,11 +225,11 @@ public class MemberMaster implements Serializable {
 //		this.membershipTypeID = membershipTypeID;
 //	}
 
-	public String getMemberStatus() {
+	public MemberStatusEnum getMemberStatus() {
 		return this.memberStatus;
 	}
 
-	public void setMemberStatus(String memberStatus) {
+	public void setMemberStatus(MemberStatusEnum memberStatus) {
 		this.memberStatus = memberStatus;
 	}
 

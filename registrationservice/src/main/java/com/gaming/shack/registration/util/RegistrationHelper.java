@@ -9,6 +9,7 @@ import com.gaming.shack.core.utils.DateFormatterUtils;
 import com.gaming.shack.data.entity.registration.Address;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.enums.AddressType;
+import com.gaming.shack.data.enums.MemberStatusEnum;
 import com.gaming.shack.data.model.MemberAddressDTO;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberDetailsDTO;
@@ -41,8 +42,10 @@ public class RegistrationHelper {
 		entity.setEmailaddress(memberProfile.getEmailId());
 		entity.setUpdateBy(RegistrationUtil.getLoggedInUserId());
 		entity.setParentMemberID(memberProfile.getParentMemberId());
-		//entity.setMembershipTypeID(new Long(memberProfile.getMembershipType()));
 		entity.setMemberTypeID(new Long(memberProfile.getMemberType()));
+		entity.setTCTemplateID(memberProfile.getTcTemplateId());
+		entity.setCardBarCode(memberProfile.getCardBarCode());
+		entity.setMemberStatus(MemberStatusEnum.PRE);
 		populateAddresses(member.getMemberDetails(), entity);
 		return entity;
 	}
@@ -55,10 +58,10 @@ public class RegistrationHelper {
 	private void populateAddresses(MemberDetailsDTO memberDetails, MemberMaster entity) {
 		List<Address> addresses = new ArrayList<Address>();
 		if (memberDetails != null && memberDetails.getMailAddress() != null) {
-			addresses.add(createAddressEntity(memberDetails.getMailAddress(), AddressType.MAIlING_ADDRESS, entity));
+			addresses.add(createAddressEntity(memberDetails.getMailAddress(), AddressType.MAIL, entity));
 		}
 		if (memberDetails != null && memberDetails.getBillingAddress() != null) {
-			addresses.add(createAddressEntity(memberDetails.getBillingAddress(), AddressType.BILLING_ADDRESS, entity));
+			addresses.add(createAddressEntity(memberDetails.getBillingAddress(), AddressType.BILL, entity));
 		}
 
 		if (!addresses.isEmpty()) {
