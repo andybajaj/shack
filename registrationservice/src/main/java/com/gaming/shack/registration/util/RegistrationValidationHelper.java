@@ -7,6 +7,7 @@ import com.gaming.shack.core.constants.ShackResourceConstants;
 import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.SiteMaster;
+import com.gaming.shack.data.enums.ChannelType;
 import com.gaming.shack.data.enums.MemberType;
 import com.gaming.shack.data.enums.MembershipType;
 import com.gaming.shack.data.model.MemberAddressDTO;
@@ -66,10 +67,28 @@ public class RegistrationValidationHelper {
 			throw new ShackValidationException(validationErrorCode,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_CHANNEL);
 		}
-
-		validateMembership(memberProfile);
+		
+		validateChannel(memberProfile.getChannelId());
+		
+		validateMembership(memberProfile);		
 		validateMemberAddress(member.getMemberDetails());
 	}
+	
+	/**
+	 * 
+	 * @param channelId
+	 * @throws ShackValidationException
+	 */
+	private void validateChannel(Long channelId) throws ShackValidationException {
+		for (ChannelType channelType : ChannelType.values()) {
+			if (channelType.getChanneId() == channelId.intValue()) {
+				return ;
+			}
+		}
+		throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+				ShackResourceConstants.ERROR_CODE_ADD_CHANNEL_NDF_SYS); 
+	}
+
 
 	/**
 	 * 

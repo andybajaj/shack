@@ -78,7 +78,7 @@ public class ShackRegistrationService implements IShackRegistrationService {
 			validationhelper.validateMemberProfile(member);
 			
 			SiteMaster siteMaster = siteMasterDAO.findById(member.getMemberProfile().getPreferredSite()) ;
-			Channel channel = channelDAO.findById(member.getMemberProfile().getChannelId()) ;
+			Channel channel = channelDAO.findChannelById(member.getMemberProfile().getChannelId()) ;
 			
 			validationhelper.validateSiteAndChannel(siteMaster, channel);
 			/**

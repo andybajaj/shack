@@ -41,7 +41,7 @@ public class RegistrationHelper {
 		entity.setEmailaddress(memberProfile.getEmailId());
 		entity.setUpdateBy(RegistrationUtil.getLoggedInUserId());
 		entity.setParentMemberID(memberProfile.getParentMemberId());
-		entity.setMembershipTypeID(new Long(memberProfile.getMembershipType()));
+		//entity.setMembershipTypeID(new Long(memberProfile.getMembershipType()));
 		entity.setMemberTypeID(new Long(memberProfile.getMemberType()));
 		populateAddresses(member.getMemberDetails(), entity);
 		return entity;

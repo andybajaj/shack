@@ -31,4 +31,5 @@ public class ShackResourceConstants {
 	public static final String ERROR_CODE_ADD_MEMBER_STATE = "State required" ;
 	public static final String ERROR_CODE_ADD_MEMBER_ZIPCODE = "Zip code required" ;
 	public static final String ERROR_CODE_ADD_MEMBER_COUNTRY = "Country required" ;
+	public static final String ERROR_CODE_ADD_CHANNEL_NDF_SYS = "Channel not defined in system" ;
 }
