@@ -49,12 +49,12 @@ public class RegistrationHelper {
 			entity.setMemberTypeID(new Long(memberProfile.getMemberType()));
 			entity.setTCTemplateID(memberProfile.getTcTemplateId());
 			entity.setCardBarCode(memberProfile.getCardBarCode());
-			entity.setMemberStatus(MemberStatusEnum.PRE);
+			entity.setMemberStatus(MemberStatusEnum.P);
 			entity.setMemberID(generateMemberId());
 			
 			entity.setTelephoneCountryCode(memberProfile.getPhoneNumberCountryCode());
 			entity.setTelephoneNumber(memberProfile.getPhoneNumber());
-			
+			entity.setProfilePictureURI(memberProfile.getProfilePictureUri());
 			populateAddresses(member.getMemberDetails(), entity);
 			
 			return entity;
