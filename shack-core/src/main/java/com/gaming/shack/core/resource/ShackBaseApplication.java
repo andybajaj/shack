@@ -6,15 +6,14 @@ package com.gaming.shack.core.resource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.server.ResourceConfig;
 
-import com.gaming.shack.core.swagger.ShackSwaggerBootStrap;
-
-
+// TODO: Auto-generated Javadoc
 /**
  * The Class JobsLibApplication.
  */
-
-public class ShackBaseApplication extends ShackSwaggerBootStrap {
+// @javax.ws.rs.ApplicationPath("v2")
+public class ShackBaseApplication extends ResourceConfig {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LogManager.getLogger(ShackBaseApplication.class);
