@@ -5,6 +5,8 @@ package com.gaming.shack.core.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ShackBaseDao.
@@ -60,6 +62,8 @@ public interface IShackBaseDao<T , I extends Object> {
 	 * @return
 	 */
 	public T update(T entity);
+	
+	public T getSingleResult(Query query);
 	
 	/**
 	 * Insert batch.

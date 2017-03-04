@@ -40,6 +40,6 @@ public class ShackRegistrationApplication extends ShackBaseApplication {
 		super();
 		LOGGER.info("Shack Registration Jersey application");
         register(ShackRegistrationResource.class);
-       
+        register(ShackAuthenticationResource.class);
     }
 }

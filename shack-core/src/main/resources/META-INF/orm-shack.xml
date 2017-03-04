@@ -3,12 +3,45 @@
 	xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
 
-
-	
-	
 	<named-query name="User.findAll">
 		<query>  select new com.gaming.shack.data.model.UserDTO(user.emailAddress,
 		user.firstName,user.lastName,user.password,user.userName) from User user
 	  </query>
+	</named-query>
+
+	<named-query name="Member.findMemberById">
+		<query>
+		  select m from MemberMaster m where m.memberID=:id 
+     </query>
+	</named-query>
+
+	<named-query name="Member.findMemberByEmail">
+		<query>
+		  select m from MemberMaster m where m.emailaddress =:email
+     </query>
+	</named-query>
+
+	<named-query name="MemberAccount.findMemberAccountById">
+		<query>
+		  select m from MemberAccount m where m.memberID =:memId
+     </query>
+	</named-query>
+
+	<named-query name="Member.updateMemberStatus">
+		<query>
+		  update MemberMaster m set m.memberStatus=:status ,m.updateDate=now() where m.memberID =:memId
+     </query>
+	</named-query>
+
+	<named-query name="MemberAccount.updateNoOfFailedAttempt">
+		<query>
+		  update MemberAccount m set m.noOfFailAttem=:noOffailedAttempts ,m.lastUpdateDate=now() where m.memberID =:memId
+     	</query>
+	</named-query>
+
+	<named-query name="MemberAccount.updateSucessLogin">
+		<query>
+		  update MemberAccount m set m.noOfFailAttem=0 ,m.lastUpdateDate=now(), m.lastLogin=now() where m.memberID =:memId
+     	</query>
 	</named-query>
 </entity-mappings>
