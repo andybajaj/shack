@@ -16,6 +16,7 @@ import com.gaming.shack.core.exception.ShackResourceException;
 import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.core.model.ItemList;
+import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
 import com.gaming.shack.registration.service.IShackRegistrationService;
@@ -68,12 +69,12 @@ public class ShackRegistrationResource implements IShackRegistrationResource {
 		  "channelId":18 
 		}
 	 */
-	public ItemList<MemberProfileDTO> addMemberMaster(MemberProfileDTO memberProfileIn) throws ShackValidationException , ShackResourceException {
+	public ItemList<MemberDTO> addMemberMaster(MemberDTO memberIn) throws ShackValidationException , ShackResourceException {
 		try {
 			LOGGER.info("addMemberMaster api called");
-			MemberProfileDTO memberProfile = shackRegistrationService.addMemberMaster(memberProfileIn) ; 
-			ItemList<MemberProfileDTO> items = new ItemList<>();
-			items.setItems(memberProfile);
+			MemberDTO member = shackRegistrationService.addMemberMaster(memberIn) ; 
+			ItemList<MemberDTO> items = new ItemList<>();
+			items.setItems(member);
 			return items ;
 		} catch(ShackValidationException sve) {
 			throw sve ;

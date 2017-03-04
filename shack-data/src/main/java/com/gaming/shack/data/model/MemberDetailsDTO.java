@@ -8,7 +8,13 @@ import java.util.List;
  * @author shahnawf
  *
  */
-public class MemberDetailsDTO {
+public class MemberDetailsDTO implements Serializable {
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7150913610867793054L;
 	
 	private String faceBookId ; 
 	private String profilePictureId ; 

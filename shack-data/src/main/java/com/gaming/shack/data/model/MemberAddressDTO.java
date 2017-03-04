@@ -15,7 +15,6 @@ public class MemberAddressDTO {
 	private String state;
 	private String country;
 	private String zipCode;
-	private AddressType addressType ;
 	
 	public String getAddressLine1() {
 		return addressLine1;
@@ -53,17 +52,11 @@ public class MemberAddressDTO {
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
-	public AddressType getAddressType() {
-		return addressType;
-	}
-	public void setAddressType(AddressType addressType) {
-		this.addressType = addressType;
-	}
+		
 	@Override
 	public String toString() {
 		return "MemberAddressDTO [addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + ", city=" + city
-				+ ", state=" + state + ", country=" + country + ", zipCode=" + zipCode + ", addressType=" + addressType
-				+ "]";
+				+ ", state=" + state + ", country=" + country + ", zipCode=" + zipCode + "]";
 	}
 	
 	

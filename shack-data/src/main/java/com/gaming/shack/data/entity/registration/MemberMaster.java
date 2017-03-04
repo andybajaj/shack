@@ -110,7 +110,7 @@ public class MemberMaster implements Serializable {
 	private List<MemberMaster_AUD> memberMasterAuds;
 
 	//bi-directional many-to-one association to Address
-	@OneToMany(mappedBy="memberMaster")
+	@OneToMany(mappedBy="memberMaster" , fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
 	private List<Address> addresses;
 
 	//bi-directional many-to-one association to MemberActivation

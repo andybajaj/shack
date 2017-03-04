@@ -7,10 +7,9 @@ import java.util.List;
 
 import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.exception.ShackValidationException;
-import com.gaming.shack.data.model.MemberProfileDTO;
+import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.UserDTO;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface IShackRegistrationService.
  */
@@ -26,11 +25,12 @@ public interface IShackRegistrationService {
 	
 	/**
 	 * 
-	 * @param memberProfile
+	 * @param member
 	 * @return
+	 * @throws ShackValidationException
 	 * @throws ShackServiceException
 	 */
-	public MemberProfileDTO addMemberMaster(MemberProfileDTO memberProfile)
+	public MemberDTO addMemberMaster(MemberDTO member)
 			throws ShackValidationException, ShackServiceException; 
 	
 

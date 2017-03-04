@@ -38,9 +38,7 @@ public class MemberProfileDTO implements Serializable {
 	private Long parentMemberId ;
 	
 	private Long memberId ; 
-	
-	private MemberDetailsDTO memberDetails ;
-	
+			
 	/**
 	 * This will be moved to header later
 	 */
@@ -160,15 +158,7 @@ public class MemberProfileDTO implements Serializable {
 		this.encodedPassword = encodedPassword;
 	}
 
-	public MemberDetailsDTO getMemberDetails() {
-		return memberDetails;
-	}
-
-	public void setMemberDetails(MemberDetailsDTO memberDetails) {
-		this.memberDetails = memberDetails;
-	}
-	
-	
+			
 	public Long getParentMemberId() {
 		return parentMemberId;
 	}
@@ -203,8 +193,8 @@ public class MemberProfileDTO implements Serializable {
 				+ ", leftHanded=" + leftHanded + ", preferredSite=" + preferredSite + ", membershipType="
 				+ membershipType + ", memberType=" + memberType + ", termConditionVersion=" + termConditionVersion
 				+ ", encodedPassword=" + encodedPassword + ", parentMemberId=" + parentMemberId + ", memberId="
-				+ memberId + ", memberDetails=" + memberDetails + ", channelId=" + channelId + "]";
-	} 
+				+ memberId + ", channelId=" + channelId + "]";
+	}
 	
 	
 	
