@@ -19,6 +19,7 @@ import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.entity.registration.SiteMaster;
 import com.gaming.shack.data.model.MemberDTO;
+import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
 import com.gaming.shack.registration.dao.IChannelDAO;
 import com.gaming.shack.registration.dao.IMemberMasterDAO;
@@ -26,7 +27,6 @@ import com.gaming.shack.registration.dao.IShackResgistrationDao;
 import com.gaming.shack.registration.dao.ISiteMasterDAO;
 import com.gaming.shack.registration.util.RegistrationHelper;
 import com.gaming.shack.registration.util.RegistrationValidationHelper;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class ShackRegistrationService.
@@ -83,6 +83,8 @@ public class ShackRegistrationService implements IShackRegistrationService {
 			Channel channel = channelDAO.findChannelById(member.getMemberProfile().getChannelId());
 
 			validationhelper.validateSiteAndChannel(siteMaster, channel);
+			validateParentMember(member.getMemberProfile());
+			
 			/**
 			 * Validate the channels and site before proceeding
 			 */
@@ -107,6 +109,22 @@ public class ShackRegistrationService implements IShackRegistrationService {
 		}
 
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param memberProfile
+	 * @throws ShackValidationException
+	 * @throws ShackDAOException
+	 */
+	private void validateParentMember(MemberProfileDTO memberProfile) throws ShackValidationException , ShackDAOException {		
+		if(memberProfile.getParentMemberId() !=null && memberProfile.getParentMemberId() > 0) {
+			MemberMaster parentMember = memberDAO.findMemberById(memberProfile.getParentMemberId()) ;
+			if(parentMember == null) {
+				throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+						ShackResourceConstants.ERROR_CODE_ADD_PARENT_MEMBEPER_NOT_IN_SYSTEM);
+			}
+		}		
 	}
 
 }

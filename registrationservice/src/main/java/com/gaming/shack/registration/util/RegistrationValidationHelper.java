@@ -179,6 +179,13 @@ public class RegistrationValidationHelper {
 			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
 					ShackResourceConstants.ERROR_CODE_ADD_INVALID_MEMTYPE_FOR_NONMINOR);
 		}
+		
+		if(MemberType.MINOR == selectedMemType && (memberProfile.getParentMemberId() == null || 
+				memberProfile.getParentMemberId() <=0)) {
+			
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_PARENT_MEMBERID);
+		} 
 	}
 
 	/**

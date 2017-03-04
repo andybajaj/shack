@@ -38,4 +38,6 @@ public class ShackResourceConstants {
 	public static final String ERROR_CODE_ADD_INVALID_MEMTYPE_FOR_MINOR = "Invalid member type for minor" ;
 	
 	public static final String ERROR_CODE_ADD_INVALID_MEMTYPE_FOR_NONMINOR = "Invalid member type for non-minor" ;
+	public static final String ERROR_CODE_ADD_PARENT_MEMBERID = "Parent member id required" ;
+	public static final String ERROR_CODE_ADD_PARENT_MEMBEPER_NOT_IN_SYSTEM = "Parent member id not found in system" ;
 }
