@@ -18,6 +18,7 @@ public class MemberActivation implements Serializable {
 
 	@Id
 	@Column(name="MAID")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long maid;
 
 	@Temporal(TemporalType.TIMESTAMP)

@@ -14,21 +14,14 @@ public enum MemberStatusEnum {
 		return this.status;
 	}
 	
-	public static MemberStatusEnum toEnum(String statusStr){
-		
-		
+	public static MemberStatusEnum toEnum(String statusStr){		
 		
 		if(statusStr == null){
-			System.out.println("inside null");
 			return null;
 		}
 		
 		for(MemberStatusEnum status: MemberStatusEnum.values()){
-			System.out.println("status"+status);
-			System.out.println("statusStr"+statusStr);
 			if(status!=null && status.valueOf().equalsIgnoreCase(statusStr)){
-			
-				System.out.println("statusStr"+statusStr);
 				return status;
 			}
 		}

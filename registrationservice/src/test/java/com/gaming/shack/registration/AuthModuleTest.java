@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gaming.shack.authentication.dao.IAuthenticationDao;
 import com.gaming.shack.authentication.service.IAuthenticationService;
 import com.gaming.shack.data.entity.registration.MemberAccount;
+import com.gaming.shack.data.model.LoginBaseDTO;
 import com.gaming.shack.data.model.LoginDTO;
 import com.gaming.shack.data.model.LoginResponse;
 
@@ -29,7 +30,7 @@ public class AuthModuleTest {
 	private IAuthenticationService authService;
 	
 	//valid record
-	
+	@Ignore
 	@Test
 	@Transactional
 	public void testMemCheckDAO(){
@@ -105,4 +106,26 @@ public class AuthModuleTest {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	//valid record
+		
+		@Test
+		@Transactional
+		public void testForGotPassword(){
+		    //Long id =122334L;
+		    String id = "122334";
+		   
+		    LoginBaseDTO loginBasedto = new LoginBaseDTO();
+		    loginBasedto.setId(id);
+		   
+			try{
+				authService.forgotPassword(loginBasedto);
+		  
+			
+			}catch(Exception e){
+				System.out.println("exception    in   testForGotPassword");
+				e.printStackTrace();
+			}
+		}
 }

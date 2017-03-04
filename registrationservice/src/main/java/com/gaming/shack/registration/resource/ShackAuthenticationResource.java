@@ -1,6 +1,7 @@
 package com.gaming.shack.registration.resource;
 
-import java.util.UUID;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.gaming.shack.authentication.service.IAuthenticationService;
 import com.gaming.shack.core.exception.ShackResourceException;
 import com.gaming.shack.core.exception.ShackServiceException;
+import com.gaming.shack.data.model.LoginBaseDTO;
 import com.gaming.shack.data.model.LoginDTO;
 import com.gaming.shack.data.model.LoginResponse;
 
@@ -25,20 +27,31 @@ public class ShackAuthenticationResource implements IShackAuthenticationResource
 	@Override
 	public LoginResponse login(LoginDTO loginDTO) throws ShackResourceException {
 		
-		System.out.println("loginDTO "+loginDTO);
+		LoginResponse resp =null;
 		
 		try{
 		
-			LoginResponse resp = authenticationService.login(loginDTO);
+			resp = authenticationService.login(loginDTO);
 			
 		}catch (ShackServiceException e) {
 			throw new ShackResourceException("111", "Error in login");
 		}
+	
+		return resp;
+	}
+	
+	@Override
+	public List<String> forGotPassword(LoginBaseDTO loginBaseDTO) throws ShackResourceException {
 		
-		LoginResponse response = new LoginResponse();
-		response.setSessionID(UUID.randomUUID().toString());
+		try{
 		
-		return response;
+			authenticationService.forgotPassword(loginBaseDTO);
+			
+		}catch (ShackServiceException e) {
+			throw new ShackResourceException("112", "Error in ForgotPassword");
+		}
+		
+		return Collections.emptyList();
 	}
 
 }

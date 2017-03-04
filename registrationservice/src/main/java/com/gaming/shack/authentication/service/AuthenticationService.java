@@ -8,14 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gaming.shack.authentication.dao.IAuthenticationDao;
+import com.gaming.shack.authentication.helper.AuthenticationHelper;
 import com.gaming.shack.core.annotation.ShackRTX;
 import com.gaming.shack.core.constants.ShackConstant;
 import com.gaming.shack.core.exception.ShackDAOException;
 import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.data.entity.registration.MemberAccount;
+import com.gaming.shack.data.entity.registration.MemberActivation;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.enums.MemberStatusEnum;
+import com.gaming.shack.data.model.LoginBaseDTO;
 import com.gaming.shack.data.model.LoginDTO;
 import com.gaming.shack.data.model.LoginResponse;
 
@@ -42,24 +45,21 @@ public class AuthenticationService implements IAuthenticationService {
 			if (isId) {
 				Long id = new Long(loginorEmailID);
 				member = authDAO.findMemberById(id);
-				System.out.println("----------login id found--------");
 
 			} else {
 				member = authDAO.findMemberByEmailID(loginorEmailID);
-				System.out.println("----------email id found--------");
 			}
 
 			if (member == null) {
-				System.out.println("----------email or  id not found error condition--------");
 				throw new ShackValidationException("100", "given member id or email not found");
 			}
 
 			// 2. check member status and throw error
 			MemberStatusEnum memberStatus = member.getMemberStatus();
-			validateMemberStatus(memberStatus);
+			AuthenticationHelper.validateLoginMemberStatus(memberStatus);
 
 			// Storing memberId for further processing
-			Long memberId = member.getMmid();
+			Long mmID = member.getMmid();
 
 			// 3. read member account detail
 			//memberAcc = authDAO.findMemberAccount(memberId);
@@ -67,7 +67,6 @@ public class AuthenticationService implements IAuthenticationService {
 			
 			// throw error if member account not exist
 			if (memberAcc == null) {
-				System.out.println("----------member account not found error condition--------");
 				throw new ShackValidationException("106", "Member Account detail doesn't exist");
 
 			}
@@ -77,18 +76,16 @@ public class AuthenticationService implements IAuthenticationService {
 
 				if (!(logindt.getPasscode().equals(memberAcc.getPassword()))) {
 
-					System.out.println("----------Password doesnt match--------");
-
 					// Increment the error attempt count and other attributes if
 					// failed.
 					// update the member status to lock after 3 attempt
 
 					// update no of failed count
-					authDAO.updateNoOfFailedAttempt(memberAcc.getNoOfFailAttem() + 1, memberId);
+					authDAO.updateNoOfFailedAttempt(memberAcc.getNoOfFailAttem() + 1, mmID);
 
 					// set status as locked
 					if (memberAcc.getNoOfFailAttem() >= (ShackConstant.MAX_LOGGIN_ATTEMPT - 1)) {
-						authDAO.updateMemberStatus(MemberStatusEnum.LOCKED.valueOf(), memberId);
+						authDAO.updateMemberStatus(MemberStatusEnum.LOCKED.valueOf(), mmID);
 					}
 
 					throw new ShackValidationException("109", "password doesnt match");
@@ -96,7 +93,7 @@ public class AuthenticationService implements IAuthenticationService {
 			}
 
 			// if success - update error attempt count to zero and update last successful login time.
-			authDAO.updateSucessLogin(memberId);
+			authDAO.updateSucessLogin(mmID);
 
 			response = new LoginResponse();
 			response.setSessionID(UUID.randomUUID().toString());
@@ -109,28 +106,49 @@ public class AuthenticationService implements IAuthenticationService {
 
 	}
 
-	private void validateMemberStatus(MemberStatusEnum memberStatus) throws ShackValidationException {
+	@ShackRTX
+	@Override
+	public void forgotPassword(LoginBaseDTO logindt) throws ShackServiceException, ShackValidationException {
 
+		try {
 
-		if (StringUtils.isEmpty(memberStatus.valueOf())) {
-			throw new ShackValidationException("101", "No valid member status found");
+			MemberMaster member = null;
+
+			// 1. check if the input ID is valid.
+			String loginorEmailID = logindt.getId();
+			boolean isId = StringUtils.isNumeric(loginorEmailID);
+
+			if (isId) {
+				Long id = new Long(loginorEmailID);
+				member = authDAO.findMemberById(id);
+
+			} else {
+				member = authDAO.findMemberByEmailID(loginorEmailID);
+			}
+
+			if (member == null) {
+				throw new ShackValidationException("100", "given member id or email not found");
+			}
+
+			// 2. check member status and throw error
+			MemberStatusEnum memberStatus = member.getMemberStatus();
+			AuthenticationHelper.validateForgotPwdMemberStatus(memberStatus);
+			
+			//3. add new record in member activity table with unique key.
+			String trackingID = UUID.randomUUID().toString();
+			MemberActivation memberActivtion  = AuthenticationHelper.constructMemberActivationEntity(member, trackingID);
+			authDAO.add(memberActivtion);
+			
+			//4. send notification
+			
+			
+
+		} catch (ShackDAOException e) {
+			throw new ShackServiceException("AUTH_SERV_ERR", "exception in forgotPassword service");
 		}
 
-		switch (memberStatus) {
-		case PRE:
-			throw new ShackValidationException("102", "Member not registererd the online account");
-		case NEW:
-			throw new ShackValidationException("103", "Member account is in new status");
-		case NOTACTIVE:
-			throw new ShackValidationException("104", "Member account is not acive yet");
-		case LOCKED:
-			throw new ShackValidationException("104", "Member account is locked");
-		case SUSPENDED:
-			throw new ShackValidationException("105", "Member account is suspended");
-		default:
-
-		}
 		
+
 	}
 
 }
