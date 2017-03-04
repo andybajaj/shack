@@ -53,7 +53,7 @@ public class MemberAccount implements Serializable {
 	@Column(name="Status")
 	private String status;
 
-	@Column(name="MemberID")
+	@Column(name="MMID")
 	private Long memberID;
 
 	public Long getMemHisId() {

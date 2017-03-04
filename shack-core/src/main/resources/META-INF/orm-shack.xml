@@ -5,32 +5,27 @@
 
 	<named-query name="User.findAll">
 		<query>  select new com.gaming.shack.data.model.UserDTO(user.emailAddress,
-		user.firstName,user.lastName,user.password,user.userName) from User user
-	  </query>
+			user.firstName,user.lastName,user.password,user.userName) from User user
+	  	</query>
 	</named-query>
 
 	<named-query name="Member.findMemberById">
 		<query>
 		  select m from MemberMaster m where m.memberID=:id 
-     </query>
+     	</query>
 	</named-query>
 
 	<named-query name="Member.findMemberByEmail">
 		<query>
 		  select m from MemberMaster m where m.emailaddress =:email
-     </query>
+     	</query>
 	</named-query>
 
-	<named-query name="MemberAccount.findMemberAccountById">
-		<query>
-		  select m from MemberAccount m where m.memberID =:memId
-     </query>
-	</named-query>
 
 	<named-query name="Member.updateMemberStatus">
 		<query>
-		  update MemberMaster m set m.memberStatus=:status ,m.updateDate=now() where m.memberID =:memId
-     </query>
+		  update MemberMaster m set m.memberStatus=:status ,m.updateDate=now() where m.mmid =:memId
+     	</query>
 	</named-query>
 
 	<named-query name="MemberAccount.updateNoOfFailedAttempt">

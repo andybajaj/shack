@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -61,8 +62,8 @@ public class MemberMaster implements Serializable {
 	@Column(name="MemberID")
 	private Long memberID;
 
-	@Column(name="MembershipTypeID")
-	private Long membershipTypeID;
+//	@Column(name="MembershipTypeID")
+//	private Long membershipTypeID;
 
 	@Column(name="MemberStatus")
 	private String memberStatus;
@@ -138,6 +139,10 @@ public class MemberMaster implements Serializable {
 	//bi-directional many-to-one association to Socialmedia
 	@OneToMany(mappedBy="memberMaster")
 	private List<Socialmedia> socialmedias;
+	
+	@OneToOne
+	@JoinColumn(name="MMID")
+	private MemberAccount memberAccount;
 
 	public MemberMaster() {
 	}
@@ -206,13 +211,13 @@ public class MemberMaster implements Serializable {
 		this.memberID = memberID;
 	}
 
-	public Long getMembershipTypeID() {
-		return this.membershipTypeID;
-	}
-
-	public void setMembershipTypeID(Long membershipTypeID) {
-		this.membershipTypeID = membershipTypeID;
-	}
+//	public Long getMembershipTypeID() {
+//		return this.membershipTypeID;
+//	}
+//
+//	public void setMembershipTypeID(Long membershipTypeID) {
+//		this.membershipTypeID = membershipTypeID;
+//	}
 
 	public String getMemberStatus() {
 		return this.memberStatus;
@@ -240,6 +245,14 @@ public class MemberMaster implements Serializable {
 
 	public String getMobileBarCodeURI() {
 		return this.mobileBarCodeURI;
+	}
+
+	public MemberAccount getMemberAccount() {
+		return memberAccount;
+	}
+
+	public void setMemberAccount(MemberAccount memberAccount) {
+		this.memberAccount = memberAccount;
 	}
 
 	public void setMobileBarCodeURI(String mobileBarCodeURI) {
@@ -478,7 +491,7 @@ public class MemberMaster implements Serializable {
 	public String toString() {
 		return "MemberMaster [mmid=" + mmid + ", cardBarCode=" + cardBarCode + ", createBy=" + createBy
 				+ ", createDate=" + createDate + ", dateOfBirth=" + dateOfBirth + ", emailaddress=" + emailaddress
-				+ ", givenName=" + givenName + ", memberID=" + memberID + ", membershipTypeID=" + membershipTypeID
+				+ ", givenName=" + givenName + ", memberID=" + memberID  
 				+ ", memberStatus=" + memberStatus + ", memberTypeID=" + memberTypeID + ", middleName=" + middleName
 				+ ", mobileBarCodeURI=" + mobileBarCodeURI + ", nameTitle=" + nameTitle + ", parentMemberID="
 				+ parentMemberID + ", profilePictureURI=" + profilePictureURI + ", socialmediaID=" + socialmediaID
@@ -508,7 +521,6 @@ public class MemberMaster implements Serializable {
 		result = prime * result + ((memberMasterAuds == null) ? 0 : memberMasterAuds.hashCode());
 		result = prime * result + ((memberStatus == null) ? 0 : memberStatus.hashCode());
 		result = prime * result + ((memberTypeID == null) ? 0 : memberTypeID.hashCode());
-		result = prime * result + ((membershipTypeID == null) ? 0 : membershipTypeID.hashCode());
 		result = prime * result + ((membershipTypeXs == null) ? 0 : membershipTypeXs.hashCode());
 		result = prime * result + ((middleName == null) ? 0 : middleName.hashCode());
 		result = prime * result + ((mmid == null) ? 0 : mmid.hashCode());
@@ -607,11 +619,6 @@ public class MemberMaster implements Serializable {
 				return false;
 		} else if (!memberTypeID.equals(other.memberTypeID))
 			return false;
-		if (membershipTypeID == null) {
-			if (other.membershipTypeID != null)
-				return false;
-		} else if (!membershipTypeID.equals(other.membershipTypeID))
-			return false;
 		if (membershipTypeXs == null) {
 			if (other.membershipTypeXs != null)
 				return false;
@@ -694,6 +701,5 @@ public class MemberMaster implements Serializable {
 			return false;
 		return true;
 	}
-	
 	
 }

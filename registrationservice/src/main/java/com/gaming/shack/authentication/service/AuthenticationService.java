@@ -59,10 +59,12 @@ public class AuthenticationService implements IAuthenticationService {
 			validateMemberStatus(memberStatus);
 
 			// Storing memberId for further processing
-			Long memberId = member.getMemberID();
+			Long memberId = member.getMmid();
 
 			// 3. read member account detail
-			memberAcc = authDAO.findMemberAccount(memberId);
+			//memberAcc = authDAO.findMemberAccount(memberId);
+			memberAcc = member.getMemberAccount();
+			
 			// throw error if member account not exist
 			if (memberAcc == null) {
 				System.out.println("----------member account not found error condition--------");
@@ -85,7 +87,7 @@ public class AuthenticationService implements IAuthenticationService {
 					authDAO.updateNoOfFailedAttempt(memberAcc.getNoOfFailAttem() + 1, memberId);
 
 					// set status as locked
-					if (memberAcc.getNoOfFailAttem() == (ShackConstant.MAX_LOGGIN_ATTEMPT - 1)) {
+					if (memberAcc.getNoOfFailAttem() >= (ShackConstant.MAX_LOGGIN_ATTEMPT - 1)) {
 						authDAO.updateMemberStatus(MemberStatusEnum.LOCKED.valueOf(), memberId);
 					}
 
