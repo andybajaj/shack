@@ -3,10 +3,12 @@ package com.gaming.shack.data.entity.registration;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -69,9 +71,9 @@ public class Address implements Serializable {
 
 	//bi-directional many-to-one association to MemberMaster
 	@ManyToOne
-	@JoinColumn(name="MMID")
+	@JoinColumn(name="MMID" , referencedColumnName="MMID")
 	private MemberMaster memberMaster;
-
+			
 	public Address() {
 	}
 
