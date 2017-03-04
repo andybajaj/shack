@@ -20,15 +20,15 @@ public class AuthenticationHelper {
 		}
 
 		switch (memberStatus) {
-		case PRE:
+		case P:
 			throw new ShackValidationException("102", "Member not registererd the online account");
-		case NEW:
+		case N:
 			throw new ShackValidationException("103", "Member account is in new status");
-		case NOTACTIVE:
+		case NC:
 			throw new ShackValidationException("104", "Member account is not acive yet");
-		case LOCKED:
+		case L:
 			throw new ShackValidationException("104", "Member account is locked");
-		case SUSPENDED:
+		case S:
 			throw new ShackValidationException("105", "Member account is suspended");
 		default:
 
@@ -43,13 +43,13 @@ public class AuthenticationHelper {
 		}
 
 		switch (memberStatus) {
-		case PRE:
+		case P:
 			throw new ShackValidationException("102", "Member not registererd the online account");
 		
-		case NOTACTIVE:
+		case NC:
 			throw new ShackValidationException("104", "Member account is not acive yet");
 		
-		case SUSPENDED:
+		case S:
 			throw new ShackValidationException("105", "Member account is suspended");
 		default:
 

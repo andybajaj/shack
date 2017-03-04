@@ -85,7 +85,7 @@ public class AuthenticationService implements IAuthenticationService {
 
 					// set status as locked
 					if (memberAcc.getNoOfFailAttem() >= (ShackConstant.MAX_LOGGIN_ATTEMPT - 1)) {
-						authDAO.updateMemberStatus(MemberStatusEnum.LOCKED.valueOf(), mmID);
+						authDAO.updateMemberStatus(MemberStatusEnum.L.valueOf(), mmID);
 					}
 
 					throw new ShackValidationException("109", "password doesnt match");

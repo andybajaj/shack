@@ -1,10 +1,15 @@
 package com.gaming.shack.registration.util;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import com.gaming.shack.core.constants.ShackResourceConstants;
 import com.gaming.shack.core.exception.ShackValidationException;
+import com.gaming.shack.core.utils.DateFormatterUtils;
 import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.SiteMaster;
 import com.gaming.shack.data.enums.ChannelType;
@@ -14,6 +19,7 @@ import com.gaming.shack.data.model.MemberAddressDTO;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberDetailsDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
+import com.gaming.shack.registration.constants.RegistrationConstants;
 
 /**
  * The helper class for the registration
@@ -23,6 +29,8 @@ import com.gaming.shack.data.model.MemberProfileDTO;
  */
 @Component
 public class RegistrationValidationHelper {
+
+	private static final Logger LOGGER = LogManager.getLogger(RegistrationValidationHelper.class);
 
 	/**
 	 * 
@@ -35,11 +43,6 @@ public class RegistrationValidationHelper {
 
 		String validationErrorCode = ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION;
 
-		if (memberProfile.getMemberId() == null || memberProfile.getMemberId() <= 0) {
-			throw new ShackValidationException(validationErrorCode,
-					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBER_ID);
-		}
-
 		if (StringUtils.isEmpty(memberProfile.getFirstName())) {
 			throw new ShackValidationException(validationErrorCode,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_FIRST_NAME);
@@ -48,10 +51,6 @@ public class RegistrationValidationHelper {
 		if (StringUtils.isEmpty(memberProfile.getLastName())) {
 			throw new ShackValidationException(validationErrorCode,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_FIRST_NAME);
-		}
-
-		if (StringUtils.isEmpty(memberProfile.getEmailId())) {
-			throw new ShackValidationException(validationErrorCode, ShackResourceConstants.ERROR_CODE_ADD_MEMBER_EMAIL);
 		}
 
 		if (StringUtils.isEmpty(memberProfile.getDateOfBirth())) {
@@ -67,38 +66,54 @@ public class RegistrationValidationHelper {
 			throw new ShackValidationException(validationErrorCode,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_CHANNEL);
 		}
-		
-		if (memberProfile.getTcTemplateId() == null || memberProfile.getTcTemplateId() <=0) {
+
+		if (memberProfile.getTcTemplateId() == null || memberProfile.getTcTemplateId() <= 0) {
 			throw new ShackValidationException(validationErrorCode,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_CHANNEL);
 		}
-		
-		if (memberProfile.getCardBarCode() == null || memberProfile.getCardBarCode() <=0) {
-			throw new ShackValidationException(validationErrorCode,
-					ShackResourceConstants.ERROR_CODE_ADD_CARDBARCODE);
+
+		if (memberProfile.getCardBarCode() == null || memberProfile.getCardBarCode() <= 0) {
+			throw new ShackValidationException(validationErrorCode, ShackResourceConstants.ERROR_CODE_ADD_CARDBARCODE);
 		}
-		
-		validateChannel(memberProfile.getChannelId());
-		
-		validateMembership(memberProfile);		
+
+		validateEmailAndChannel(memberProfile);
+
+		validateMembership(memberProfile);
 		validateMemberAddress(member.getMemberDetails());
+
 	}
-	
+
 	/**
 	 * 
 	 * @param channelId
 	 * @throws ShackValidationException
 	 */
-	private void validateChannel(Long channelId) throws ShackValidationException {
+	private void validateEmailAndChannel(MemberProfileDTO memberProfile) throws ShackValidationException {
+
+		ChannelType selectedChannelType = null;
 		for (ChannelType channelType : ChannelType.values()) {
-			if (channelType.getChanneId() == channelId.intValue()) {
-				return ;
+			if (channelType.getChanneId() == memberProfile.getChannelId()) {
+				selectedChannelType = channelType;
+				break;
 			}
 		}
-		throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
-				ShackResourceConstants.ERROR_CODE_ADD_CHANNEL_NDF_SYS); 
-	}
 
+		if (selectedChannelType == null) {
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_CHANNEL_NDF_SYS);
+		}
+
+		if ((selectedChannelType == ChannelType.WEBSITE || selectedChannelType == ChannelType.MOBILEAPP)
+				&& StringUtils.isEmpty(memberProfile.getEmailId())) {
+
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_EMAIL);
+		}
+
+		if (StringUtils.isEmpty(memberProfile.getEmailId())) {
+			memberProfile.setEmailId(null);
+		}
+	}
 
 	/**
 	 * 
@@ -134,17 +149,43 @@ public class RegistrationValidationHelper {
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERTYPE);
 		}
 
-		MembershipType selectedMemshipType = getMembershipType(memberProfile.getMembershipType());
-		if (selectedMemshipType == null) {
-			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
-					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERSHIPTYPE_NOT_DEFINED);
-		}
-
+		
 		MemberType selectedMemType = getMemberType(memberProfile.getMemberType());
 		if (selectedMemType == null) {
 			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERTYPE_NOT_DEFINED);
 		}
+
+		Date dateOfBirth;
+		try {
+			dateOfBirth = DateFormatterUtils.toDate(memberProfile.getDateOfBirth());
+		} catch (Exception e) {
+			LOGGER.error("Error while date conversion", e);
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_DOB);
+		}
+		
+		long memberAge = DateFormatterUtils.getDateDiffInYears(dateOfBirth) ;
+				
+		if (RegistrationConstants.AGE_TILL_MINOR >= memberAge && (MemberType.ADULT == selectedMemType ||
+				MemberType.SR_CITIZE == selectedMemType)) {
+			
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_INVALID_MEMTYPE_FOR_MINOR);
+		}
+		
+		if (RegistrationConstants.AGE_TILL_MINOR < memberAge && MemberType.MINOR == selectedMemType) {
+			
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_INVALID_MEMTYPE_FOR_NONMINOR);
+		}
+		
+		if(MemberType.MINOR == selectedMemType && (memberProfile.getParentMemberId() == null || 
+				memberProfile.getParentMemberId() <=0)) {
+			
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_PARENT_MEMBERID);
+		} 
 	}
 
 	/**

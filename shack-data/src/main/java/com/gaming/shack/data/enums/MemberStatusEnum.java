@@ -2,7 +2,7 @@ package com.gaming.shack.data.enums;
 
 public enum MemberStatusEnum {
 
-	PRE("P"), NEW("N"), NOTACTIVE ("NC"), ACTIVE ("A"), LOCKED ("L"), SUSPENDED ("S");
+	P("PRE"), N("NEW"), NC ("NOTACTIVE"), A ("ACTIVE"), L ("LOCKED"), S ("SUSPENDED");
 	
 	private String status;
 	

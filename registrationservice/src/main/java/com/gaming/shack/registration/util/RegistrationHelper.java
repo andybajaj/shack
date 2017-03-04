@@ -2,9 +2,12 @@ package com.gaming.shack.registration.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Component;
 
+import com.gaming.shack.core.constants.ShackResourceConstants;
+import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.utils.DateFormatterUtils;
 import com.gaming.shack.data.entity.registration.Address;
 import com.gaming.shack.data.entity.registration.MemberMaster;
@@ -28,26 +31,37 @@ public class RegistrationHelper {
 	 * @param memberProfile
 	 * @return
 	 */
-	public MemberMaster createMemberMaster(MemberDTO member) {
-
-		MemberProfileDTO memberProfile = member.getMemberProfile();
-
-		MemberMaster entity = new MemberMaster();
-		entity.setMemberID(memberProfile.getMemberId());
-		entity.setNameTitle(memberProfile.getNameTitle());
-		entity.setGivenName(memberProfile.getFirstName());
-		entity.setSurname(memberProfile.getLastName());
-		entity.setDateOfBirth(DateFormatterUtils.toDate(memberProfile.getDateOfBirth()));
-		entity.setCreateBy(RegistrationUtil.getLoggedInUserId());
-		entity.setEmailaddress(memberProfile.getEmailId());
-		entity.setUpdateBy(RegistrationUtil.getLoggedInUserId());
-		entity.setParentMemberID(memberProfile.getParentMemberId());
-		entity.setMemberTypeID(new Long(memberProfile.getMemberType()));
-		entity.setTCTemplateID(memberProfile.getTcTemplateId());
-		entity.setCardBarCode(memberProfile.getCardBarCode());
-		entity.setMemberStatus(MemberStatusEnum.PRE);
-		populateAddresses(member.getMemberDetails(), entity);
-		return entity;
+	public MemberMaster createMemberMaster(MemberDTO member) throws  ShackServiceException {
+		
+		try {
+			MemberProfileDTO memberProfile = member.getMemberProfile();
+	
+			MemberMaster entity = new MemberMaster();
+			entity.setMemberID(memberProfile.getMemberId());
+			entity.setNameTitle(memberProfile.getNameTitle());
+			entity.setGivenName(memberProfile.getFirstName());
+			entity.setSurname(memberProfile.getLastName());
+			entity.setDateOfBirth(DateFormatterUtils.toDate(memberProfile.getDateOfBirth()));
+			entity.setCreateBy(RegistrationUtil.getLoggedInUserId());
+			entity.setEmailaddress(memberProfile.getEmailId());
+			entity.setUpdateBy(RegistrationUtil.getLoggedInUserId());
+			entity.setParentMemberID(memberProfile.getParentMemberId());
+			entity.setMemberTypeID(new Long(memberProfile.getMemberType()));
+			entity.setTCTemplateID(memberProfile.getTcTemplateId());
+			entity.setCardBarCode(memberProfile.getCardBarCode());
+			entity.setMemberStatus(MemberStatusEnum.P);
+			entity.setMemberID(generateMemberId());
+			
+			entity.setTelephoneCountryCode(memberProfile.getPhoneNumberCountryCode());
+			entity.setTelephoneNumber(memberProfile.getPhoneNumber());
+			entity.setProfilePictureURI(memberProfile.getProfilePictureUri());
+			populateAddresses(member.getMemberDetails(), entity);
+			
+			return entity;
+		} catch(Exception e) {
+			throw new ShackServiceException(ShackResourceConstants.ERROR_CODE_ADD_MEMBER,
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MSG, e);
+		}
 	}
 
 	/**
@@ -88,5 +102,14 @@ public class RegistrationHelper {
 		address.setUpdateBy(RegistrationUtil.getLoggedInUserId());
 		address.setMemberMaster(entity);
 		return address;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Long generateMemberId() {
+		int randomNum = Math.abs(ThreadLocalRandom.current().nextInt(Integer.MIN_VALUE, Integer.MAX_VALUE));
+		return new Long(randomNum) ; 
 	}
 }
