@@ -5,10 +5,10 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="shack-core-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/shack-core/shack-core">
+        <dependent-module archiveName="shack-core-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/shack-core-2/shack-core-2">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="shack-data-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/shack-data/shack-data">
+        <dependent-module archiveName="shack-data-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/shack-data-2/shack-data-2">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="shack"/>

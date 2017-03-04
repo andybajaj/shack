@@ -17,7 +17,7 @@ public class MemberMaster_AUD implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="MMAUDID")
+	@Column(name="MMAUDID",insertable=false,updatable=false)
 	private Long mmaudid;
 
 	@Column(name="CardBarCode")
@@ -93,7 +93,7 @@ public class MemberMaster_AUD implements Serializable {
 	private Timestamp updateDate;
 
 	//bi-directional many-to-one association to MemberMaster
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name="MMID")
 	private MemberMaster memberMaster;
 

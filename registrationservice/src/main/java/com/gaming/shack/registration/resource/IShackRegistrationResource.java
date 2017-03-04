@@ -18,6 +18,11 @@ import com.gaming.shack.core.model.ItemList;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.UserDTO;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Interface IShackRegistrationResource.
@@ -25,6 +30,7 @@ import com.gaming.shack.data.model.UserDTO;
 @Path("/registration")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Api(value = "/registration", tags = "registration")
 public interface IShackRegistrationResource {
 
 	
@@ -37,6 +43,11 @@ public interface IShackRegistrationResource {
 	 */
 	@GET
 	@Path("/findallusers")
+	@ApiOperation(value = "Shack Find  Users API", notes = "This is a shack Endpoint to find all users")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success Response from API"),
+			@ApiResponse(code = 400, message = "Input fields validation error?"),
+			@ApiResponse(code = 412, message = "business fields validation error?"),
+			@ApiResponse(code = 500, message = "application system error?")})
 	public ItemList<UserDTO> findAllUsers(@Context UriInfo ui) throws ShackResourceException;
 	
 	/**

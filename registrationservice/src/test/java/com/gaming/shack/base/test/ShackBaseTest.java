@@ -16,19 +16,17 @@
  * @since:      Sep 15, 2015
 
  */
-package com.gaming.shack.core.test;
-
-import javax.servlet.http.HttpServletResponse;
+package com.gaming.shack.base.test;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+
 
 
 
@@ -36,7 +34,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * The Class PorticoBaseTest.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/app-config-test.xml" })
+@ContextConfiguration(locations = { "classpath:/applicationContext.xml" })
 @WebAppConfiguration
 public class ShackBaseTest {
 

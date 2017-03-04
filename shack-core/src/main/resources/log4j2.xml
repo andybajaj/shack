@@ -7,7 +7,7 @@
 
 
 	<Properties>
-		<Property name="SHACK_HOME">/shack</Property>
+		<Property name="SHACK_HOME">/Users/yogeshbajaj/yogesh/shack-logs</Property>
 		<Property name="filename-trace">${env:SHACK_HOME}/logs/shacktrace.log
 		</Property>
 		<Property name="filename-error">${env:SHACK_HOME}/logs/shackerror.log

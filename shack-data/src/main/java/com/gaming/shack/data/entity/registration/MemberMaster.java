@@ -75,6 +75,11 @@ public class MemberMaster implements Serializable {
 
 	@Column(name="MemberTypeID")
 	private Long memberTypeID;
+	
+	@Column(name="IsLeft")
+	private byte isLeft;
+
+	
 
 	@Column(name="MiddleName")
 	private String middleName;
@@ -113,8 +118,8 @@ public class MemberMaster implements Serializable {
 	private Timestamp updateDate;
 
 	//bi-directional many-to-one association to MemberMaster_AUD
-	@OneToMany(mappedBy="memberMaster"  , fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
-	private List<MemberMaster_AUD> memberMasterAuds;
+	/*@OneToMany(mappedBy="memberMaster"  , fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
+	private List<MemberMaster_AUD> memberMasterAuds;*/
 
 	//bi-directional many-to-one association to Address
 	@OneToMany(mappedBy="memberMaster" , fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
@@ -345,15 +350,15 @@ public class MemberMaster implements Serializable {
 		this.updateDate = updateDate;
 	}
 
-	public List<MemberMaster_AUD> getMemberMasterAuds() {
+	/*public List<MemberMaster_AUD> getMemberMasterAuds() {
 		return this.memberMasterAuds;
 	}
 
 	public void setMemberMasterAuds(List<MemberMaster_AUD> memberMasterAuds) {
 		this.memberMasterAuds = memberMasterAuds;
-	}
+	}*/
 
-	public MemberMaster_AUD addMemberMasterAud(MemberMaster_AUD memberMasterAud) {
+	/*public MemberMaster_AUD addMemberMasterAud(MemberMaster_AUD memberMasterAud) {
 		getMemberMasterAuds().add(memberMasterAud);
 		memberMasterAud.setMemberMaster(this);
 
@@ -365,7 +370,7 @@ public class MemberMaster implements Serializable {
 		memberMasterAud.setMemberMaster(null);
 
 		return memberMasterAud;
-	}
+	}*/
 
 	public List<Address> getAddresses() {
 		return this.addresses;
@@ -494,22 +499,6 @@ public class MemberMaster implements Serializable {
 	}
 
 	@Override
-	public String toString() {
-		return "MemberMaster [mmid=" + mmid + ", cardBarCode=" + cardBarCode + ", createBy=" + createBy
-				+ ", createDate=" + createDate + ", dateOfBirth=" + dateOfBirth + ", emailaddress=" + emailaddress
-				+ ", givenName=" + givenName + ", memberID=" + memberID  
-				+ ", memberStatus=" + memberStatus + ", memberTypeID=" + memberTypeID + ", middleName=" + middleName
-				+ ", mobileBarCodeURI=" + mobileBarCodeURI + ", nameTitle=" + nameTitle + ", parentMemberID="
-				+ parentMemberID + ", profilePictureURI=" + profilePictureURI + ", socialmediaID=" + socialmediaID
-				+ ", surname=" + surname + ", TCTemplateID=" + TCTemplateID + ", telephoneCountryCode="
-				+ telephoneCountryCode + ", telephoneNumber=" + telephoneNumber + ", updateBy=" + updateBy
-				+ ", updateDate=" + updateDate + ", memberMasterAuds=" + memberMasterAuds + ", addresses=" + addresses
-				+ ", memberActivations=" + memberActivations + ", channel=" + channel + ", siteMaster=" + siteMaster
-				+ ", membershipTypeXs=" + membershipTypeXs + ", optIns=" + optIns + ", socialmedias=" + socialmedias
-				+ "]";
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -522,9 +511,10 @@ public class MemberMaster implements Serializable {
 		result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
 		result = prime * result + ((emailaddress == null) ? 0 : emailaddress.hashCode());
 		result = prime * result + ((givenName == null) ? 0 : givenName.hashCode());
+		result = prime * result + isLeft;
+		result = prime * result + ((memberAccount == null) ? 0 : memberAccount.hashCode());
 		result = prime * result + ((memberActivations == null) ? 0 : memberActivations.hashCode());
 		result = prime * result + ((memberID == null) ? 0 : memberID.hashCode());
-		result = prime * result + ((memberMasterAuds == null) ? 0 : memberMasterAuds.hashCode());
 		result = prime * result + ((memberStatus == null) ? 0 : memberStatus.hashCode());
 		result = prime * result + ((memberTypeID == null) ? 0 : memberTypeID.hashCode());
 		result = prime * result + ((membershipTypeXs == null) ? 0 : membershipTypeXs.hashCode());
@@ -600,6 +590,13 @@ public class MemberMaster implements Serializable {
 				return false;
 		} else if (!givenName.equals(other.givenName))
 			return false;
+		if (isLeft != other.isLeft)
+			return false;
+		if (memberAccount == null) {
+			if (other.memberAccount != null)
+				return false;
+		} else if (!memberAccount.equals(other.memberAccount))
+			return false;
 		if (memberActivations == null) {
 			if (other.memberActivations != null)
 				return false;
@@ -610,15 +607,7 @@ public class MemberMaster implements Serializable {
 				return false;
 		} else if (!memberID.equals(other.memberID))
 			return false;
-		if (memberMasterAuds == null) {
-			if (other.memberMasterAuds != null)
-				return false;
-		} else if (!memberMasterAuds.equals(other.memberMasterAuds))
-			return false;
-		if (memberStatus == null) {
-			if (other.memberStatus != null)
-				return false;
-		} else if (!memberStatus.equals(other.memberStatus))
+		if (memberStatus != other.memberStatus)
 			return false;
 		if (memberTypeID == null) {
 			if (other.memberTypeID != null)
@@ -707,5 +696,22 @@ public class MemberMaster implements Serializable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "MemberMaster [mmid=" + mmid + ", cardBarCode=" + cardBarCode + ", createBy=" + createBy
+				+ ", createDate=" + createDate + ", dateOfBirth=" + dateOfBirth + ", emailaddress=" + emailaddress
+				+ ", givenName=" + givenName + ", memberID=" + memberID + ", memberStatus=" + memberStatus
+				+ ", memberTypeID=" + memberTypeID + ", isLeft=" + isLeft + ", middleName=" + middleName
+				+ ", mobileBarCodeURI=" + mobileBarCodeURI + ", nameTitle=" + nameTitle + ", parentMemberID="
+				+ parentMemberID + ", profilePictureURI=" + profilePictureURI + ", socialmediaID=" + socialmediaID
+				+ ", surname=" + surname + ", TCTemplateID=" + TCTemplateID + ", telephoneCountryCode="
+				+ telephoneCountryCode + ", telephoneNumber=" + telephoneNumber + ", updateBy=" + updateBy
+				+ ", updateDate=" + updateDate + ", addresses=" + addresses + ", memberActivations=" + memberActivations
+				+ ", channel=" + channel + ", siteMaster=" + siteMaster + ", membershipTypeXs=" + membershipTypeXs
+				+ ", optIns=" + optIns + ", socialmedias=" + socialmedias + ", memberAccount=" + memberAccount + "]";
+	}
+
+	
 	
 }

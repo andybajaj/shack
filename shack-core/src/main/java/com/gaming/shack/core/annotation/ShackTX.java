@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Transactional(value = "jobsLibTxm", readOnly = true, propagation = Propagation.SUPPORTS)
+@Transactional(value = "shackTxm", readOnly = true, propagation = Propagation.SUPPORTS)
 public @interface ShackTX {
 
 }

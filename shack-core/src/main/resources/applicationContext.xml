@@ -22,7 +22,7 @@
 
 
 	
-	<import resource="shack-db-config.xml" />
+	<import resource="db-config.xml" />
 	
 
 

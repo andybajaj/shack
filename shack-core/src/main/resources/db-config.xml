@@ -10,16 +10,24 @@
      					http://www.springframework.org/schema/aop 
                         http://www.springframework.org/schema/aop/spring-aop-4.2.xsd 
      					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
-
-
-
-
+     					
+   
+  
+    
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/shack" />
+		<property name="username" value="shack" />
+		<property name="password" value="shack" />
+	</bean>
 	
 
-	<bean id="shackLibEntityManagerFactory"
+
+	<bean id="shackEntityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="SHACK_PU" />
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource"/>
 		<property name="packagesToScan">
 	            <list>
                         <value>com.gaming.shack.data.entity</value>
@@ -29,11 +37,9 @@
 		<property name="mappingResources">
 		  <list>
                         <value>META-INF/orm-shack.xml</value>
-                         <value>META-INF/orm-shack-registration.xml</value>
                     
                     </list>
 		</property>
-		
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="showSql" value="false" />
@@ -52,7 +58,21 @@
               <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
          </props>
       </property>
-      </bean>
-		
+	</bean>
 
+	
+
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" >
+		<property name="entityManagerFactory" ref="shackEntityManagerFactory" />
+		<qualifier value="shackTxm" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	
+	<bean
+		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+	<bean
+		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />  
 </beans> 

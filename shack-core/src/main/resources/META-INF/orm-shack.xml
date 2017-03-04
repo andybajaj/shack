@@ -39,4 +39,9 @@
 		  update MemberAccount m set m.noOfFailAttem=0 ,m.lastUpdateDate=now(), m.lastLogin=now() where m.memberID =:memId
      	</query>
 	</named-query>
+	
+	<named-query name="MemberMaster.readBasicProfile">
+		<query>  select m from MemberMaster m  join fetch m.membershipTypeXs  where m.memberID=:memberID
+	  </query>
+	</named-query>
 </entity-mappings>
