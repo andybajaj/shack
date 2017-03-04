@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -122,6 +123,15 @@ public class ShackBaseDao<T, I extends Serializable> implements IShackBaseDao<T,
     public T merge(T entity) {
         return getEntityManager().merge(entity);
     }
+	
+	@SuppressWarnings("unchecked")
+	public T getSingleResult(Query query) {
+		try {
+			return (T)query.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 	
 	@Override
 	public int insertBatch(List<T> batchEntities) {
