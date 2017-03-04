@@ -1,8 +1,23 @@
 package com.gaming.shack.data.entity.registration;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+import com.gaming.shack.data.enums.AddressType;
 
 
 /**
@@ -10,12 +25,14 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
+@Table(name="Address")
 @NamedQuery(name="Address.findAll", query="SELECT a FROM Address a")
 public class Address implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="ADID")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="ADID")	
 	private int adid;
 
 	@Column(name="AddressLine1")
@@ -25,7 +42,8 @@ public class Address implements Serializable {
 	private String addressLine2;
 
 	@Column(name="AddressType")
-	private String addressType;
+	@Enumerated(EnumType.STRING)
+	private AddressType addressType;
 
 	@Column(name="CityName")
 	private String cityName;
@@ -53,9 +71,9 @@ public class Address implements Serializable {
 
 	//bi-directional many-to-one association to MemberMaster
 	@ManyToOne
-	@JoinColumn(name="MMID")
+	@JoinColumn(name="MMID" , referencedColumnName="MMID")
 	private MemberMaster memberMaster;
-
+			
 	public Address() {
 	}
 
@@ -83,11 +101,11 @@ public class Address implements Serializable {
 		this.addressLine2 = addressLine2;
 	}
 
-	public String getAddressType() {
+	public AddressType getAddressType() {
 		return this.addressType;
 	}
 
-	public void setAddressType(String addressType) {
+	public void setAddressType(AddressType addressType) {
 		this.addressType = addressType;
 	}
 

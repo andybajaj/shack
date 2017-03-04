@@ -25,5 +25,10 @@ public class ShackResourceConstants {
 	public static final String ERROR_CODE_ADD_MEMBER_MEMBERTYPE = "Invalid member type" ;
 	public static final String ERROR_CODE_ADD_MEMBER_MEMBERSHIPTYPE_NOT_DEFINED = "Membership type not defined in system" ;
 	public static final String ERROR_CODE_ADD_MEMBER_MEMBERTYPE_NOT_DEFINED = "Member type not defined in system" ;
-	
+	public static final String ERROR_CODE_ADD_MEMBER_MEMBERDETAILS_DEFINED = "No member details defined" ;
+	public static final String ERROR_CODE_ADD_MEMBER_ADDRESSLINE1 = "Address1 Line1 required" ;
+	public static final String ERROR_CODE_ADD_MEMBER_CITY = "City required" ;
+	public static final String ERROR_CODE_ADD_MEMBER_STATE = "State required" ;
+	public static final String ERROR_CODE_ADD_MEMBER_ZIPCODE = "Zip code required" ;
+	public static final String ERROR_CODE_ADD_MEMBER_COUNTRY = "Country required" ;
 }

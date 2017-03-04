@@ -15,7 +15,7 @@ import javax.ws.rs.core.UriInfo;
 import com.gaming.shack.core.exception.ShackResourceException;
 import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.core.model.ItemList;
-import com.gaming.shack.data.model.MemberProfileDTO;
+import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.UserDTO;
 
 // TODO: Auto-generated Javadoc
@@ -47,7 +47,7 @@ public interface IShackRegistrationResource {
 	 */
 	@POST
 	@Path("/addmembermaster")
-	public ItemList<MemberProfileDTO> addMemberMaster(MemberProfileDTO memberProfile) throws ShackValidationException , ShackResourceException ; 
+	public ItemList<MemberDTO> addMemberMaster(MemberDTO member) throws ShackValidationException , ShackResourceException ; 
 	
 
 }

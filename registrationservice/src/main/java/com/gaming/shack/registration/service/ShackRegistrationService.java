@@ -18,6 +18,7 @@ import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.entity.registration.SiteMaster;
+import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
 import com.gaming.shack.registration.dao.IChannelDAO;
@@ -69,28 +70,28 @@ public class ShackRegistrationService implements IShackRegistrationService {
 
 	@Override
 	@ShackRTX
-	public MemberProfileDTO addMemberMaster(MemberProfileDTO memberProfile) throws ShackValidationException , ShackServiceException {
+	public MemberDTO addMemberMaster(MemberDTO member) throws ShackValidationException , ShackServiceException {
 		try {
 			/**
 			 * The advanced validations will be added here
 			 */
-			validationhelper.validateMemberProfile(memberProfile);
+			validationhelper.validateMemberProfile(member);
 			
-			SiteMaster siteMaster = siteMasterDAO.findById(memberProfile.getPreferredSite()) ;
-			Channel channel = channelDAO.findById(memberProfile.getChannelId()) ;
+			SiteMaster siteMaster = siteMasterDAO.findById(member.getMemberProfile().getPreferredSite()) ;
+			Channel channel = channelDAO.findById(member.getMemberProfile().getChannelId()) ;
 			
 			validationhelper.validateSiteAndChannel(siteMaster, channel);
 			/**
 			 * Validate the channels and site before proceeding
 			 */
-			MemberMaster memberMaster = registrationHelper.createMemberMaster(memberProfile) ;
+			MemberMaster memberMaster = registrationHelper.createMemberMaster(member) ;
 			
 			memberMaster.setSiteMaster(siteMaster);		
 			memberMaster.setChannel(channel);
 			
 			memberDAO.add(memberMaster);
 			
-			return memberProfile ;
+			return member ;
 			
 		} catch(ShackValidationException sve) {
 			LOGGER.error("Validation error occured in addMemberMaster" ,sve);
