@@ -28,10 +28,10 @@ public class RegistrationHelper {
 		entity.setDateOfBirth(DateFormatterUtils.toDate(memberProfile.getDateOfBirth()));
 		entity.setCreateBy("Shah");
 		entity.setEmailaddress(memberProfile.getEmailId());
-		entity.setUpdateBy("Shah");
-		entity.setUpdateBy("Shah");
+		entity.setUpdateBy("Shah");		
 		entity.setParentMemberID(memberProfile.getParentMemberId());
-
+		entity.setMembershipTypeID(new Long(memberProfile.getMembershipType()));
+		entity.setMemberTypeID(new Long(memberProfile.getMemberType()));
 		return entity;
 	}	
 }
