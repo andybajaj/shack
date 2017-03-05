@@ -1,6 +1,7 @@
 package com.gaming.shack.authentication.service;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ import com.gaming.shack.data.enums.MemberStatusEnum;
 import com.gaming.shack.data.model.LoginBaseDTO;
 import com.gaming.shack.data.model.LoginDTO;
 import com.gaming.shack.data.model.LoginResponse;
+import com.gaming.shack.data.model.PasswordResetResponse;
 
 @Service
 public class AuthenticationService implements IAuthenticationService {
@@ -62,9 +64,9 @@ public class AuthenticationService implements IAuthenticationService {
 			Long mmID = member.getMmid();
 
 			// 3. read member account detail
-			//memberAcc = authDAO.findMemberAccount(memberId);
+			// memberAcc = authDAO.findMemberAccount(memberId);
 			memberAcc = member.getMemberAccount();
-			
+
 			// throw error if member account not exist
 			if (memberAcc == null) {
 				throw new ShackValidationException("106", "Member Account detail doesn't exist");
@@ -92,7 +94,8 @@ public class AuthenticationService implements IAuthenticationService {
 				}
 			}
 
-			// if success - update error attempt count to zero and update last successful login time.
+			// if success - update error attempt count to zero and update last
+			// successful login time.
 			authDAO.updateSucessLogin(mmID);
 
 			response = new LoginResponse();
@@ -133,22 +136,69 @@ public class AuthenticationService implements IAuthenticationService {
 			// 2. check member status and throw error
 			MemberStatusEnum memberStatus = member.getMemberStatus();
 			AuthenticationHelper.validateForgotPwdMemberStatus(memberStatus);
-			
-			//3. add new record in member activity table with unique key.
+
+			// 3. add new record in member activity table with unique key.
 			String trackingID = UUID.randomUUID().toString();
-			MemberActivation memberActivtion  = AuthenticationHelper.constructMemberActivationEntity(member, trackingID);
+			MemberActivation memberActivtion = AuthenticationHelper.constructMemberActivationEntity(member, trackingID);
 			authDAO.add(memberActivtion);
-			
-			//4. send notification
-			
-			
+
+			// 4. send notification
 
 		} catch (ShackDAOException e) {
 			throw new ShackServiceException("AUTH_SERV_ERR", "exception in forgotPassword service");
 		}
+	}
 
-		
+	
+	@ShackRTX
+	@Override
+	public PasswordResetResponse resetPasswordPreCheck(String trackingID)
+			throws ShackServiceException, ShackValidationException {
 
+		PasswordResetResponse  response = null;
+		try {
+
+			// 1. check if activation ID exist
+			MemberActivation memberActivation = authDAO.findMemberActivByUniqueId(trackingID);
+
+			if (memberActivation == null) {
+				throw new ShackValidationException("120", "given activation id not found");
+			}
+
+			// 2. check for valid member
+			MemberMaster memMaster = memberActivation.getMemberMaster();
+
+			if (memMaster == null) {
+				throw new ShackValidationException("121", "For the given activation id ,member id not found");
+			}
+
+			MemberStatusEnum memberStatus = memMaster.getMemberStatus();
+			AuthenticationHelper.validateForgotPwdMemberStatus(memberStatus);
+
+			// 3. check if the given tracking id was used already
+			if(memberActivation.getActivationTime() !=null){
+				throw new ShackValidationException("122", "This activatin link has been used already");
+			}
+			
+			// 4. Validate the activation request expiration time
+			Date expTime = memberActivation.getExpiryTime();
+
+			if (expTime.before(new Date(System.currentTimeMillis()))) {
+				throw new ShackValidationException("123", "Activation id is expired");
+			}
+
+			// 5. build response
+			
+			response = new PasswordResetResponse();
+			response.setMemberId(memMaster.getMemberID());
+			response.setEmailId(memMaster.getEmailaddress());
+			
+
+		} catch (ShackDAOException e) {
+			throw new ShackServiceException("AUTH_SERV_ERR", "exception in resetPasswordPreCheck");
+		}
+
+		return response;
 	}
 
 }

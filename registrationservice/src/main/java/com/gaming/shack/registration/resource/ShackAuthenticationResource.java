@@ -14,6 +14,7 @@ import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.data.model.LoginBaseDTO;
 import com.gaming.shack.data.model.LoginDTO;
 import com.gaming.shack.data.model.LoginResponse;
+import com.gaming.shack.data.model.PasswordResetResponse;
 
 
 @Service("ShackAuthenticationResource")
@@ -52,6 +53,24 @@ public class ShackAuthenticationResource implements IShackAuthenticationResource
 		}
 		
 		return Collections.emptyList();
+	}
+	
+	
+	@Override
+	public PasswordResetResponse resetPasswordPreCheck(String trackingID) throws ShackResourceException {
+		
+		PasswordResetResponse response = null;
+
+		try{
+			
+			response = authenticationService.resetPasswordPreCheck(trackingID);
+			
+		}catch (ShackServiceException e) {
+			throw new ShackResourceException("113", "Error in resetPasswordPreCheck");
+		}
+		
+		return response;
+		
 	}
 
 }

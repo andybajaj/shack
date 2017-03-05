@@ -12,6 +12,7 @@ import com.gaming.shack.core.dao.ShackBaseDao;
 import com.gaming.shack.core.enums.DataSourceType;
 import com.gaming.shack.core.exception.ShackDAOException;
 import com.gaming.shack.data.entity.registration.MemberAccount;
+import com.gaming.shack.data.entity.registration.MemberActivation;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 
 @Repository
@@ -116,6 +117,22 @@ public class AuthenticationDao extends ShackBaseDao<Serializable, Serializable>
 		} catch (Exception e) {
 			LOGGER.error("exception in updateNoOfFailedAttempt", e);
 			throw new ShackDAOException("AUTH_DAO_ERR", "exception in updateMemberStatus...", e);
+		}
+	}
+	
+	@ShackNewTX
+	@Override
+	public MemberActivation findMemberActivByUniqueId(String uniqueId) throws ShackDAOException {
+		try {
+			EntityManager em = getEntityManager(DataSourceType.SHACK);
+			Query query = em.createNamedQuery("MemberActivation.findMemberActivationByUniqueID");
+			query.setParameter("uniqueId", uniqueId);
+			
+			return (MemberActivation) getSingleResult(query);
+			
+		} catch (Exception e) {
+			LOGGER.error("exception in findMemberActivByUniqueId", e);
+			throw new ShackDAOException("AUTH_DAO_ERR", "exception in findMemberActivByUniqueId...", e);
 		}
 	}
 }

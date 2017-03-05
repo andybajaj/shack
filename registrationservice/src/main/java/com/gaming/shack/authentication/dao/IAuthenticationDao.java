@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.gaming.shack.core.dao.IShackBaseDao;
 import com.gaming.shack.core.exception.ShackDAOException;
 import com.gaming.shack.data.entity.registration.MemberAccount;
+import com.gaming.shack.data.entity.registration.MemberActivation;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 
 public interface IAuthenticationDao <T, I extends Serializable> extends IShackBaseDao<T, I>{
@@ -20,5 +21,8 @@ public interface IAuthenticationDao <T, I extends Serializable> extends IShackBa
 	public int updateMemberStatus(String status,Long memID)throws ShackDAOException;
 	
 	public int updateSucessLogin(Long memID) throws ShackDAOException;
+	
+	public MemberActivation findMemberActivByUniqueId(String uniqueId) throws ShackDAOException ;
+
 
 }

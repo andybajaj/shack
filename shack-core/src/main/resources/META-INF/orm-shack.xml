@@ -39,4 +39,11 @@
 		  update MemberAccount m set m.noOfFailAttem=0 ,m.lastUpdateDate=now(), m.lastLogin=now() where m.memberID =:memId
      	</query>
 	</named-query>
+	
+	
+	<named-query name="MemberActivation.findMemberActivationByUniqueID">
+		<query>
+		  select m from MemberActivation m where m.uniqueID =:uniqueId
+     	</query>
+	</named-query>
 </entity-mappings>
