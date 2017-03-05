@@ -18,6 +18,7 @@ public class OptIn implements Serializable {
 
 	@Id
 	@Column(name="OPID")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long opid;
 
 	@Temporal(TemporalType.DATE)

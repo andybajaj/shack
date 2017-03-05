@@ -17,6 +17,7 @@ public class MembershipTypeX implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="MXID")
 	private Long mxid;
 
