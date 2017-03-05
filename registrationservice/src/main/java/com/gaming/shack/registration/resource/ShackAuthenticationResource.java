@@ -3,8 +3,6 @@ package com.gaming.shack.registration.resource;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +12,13 @@ import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.data.model.LoginBaseDTO;
 import com.gaming.shack.data.model.LoginDTO;
 import com.gaming.shack.data.model.LoginResponse;
+import com.gaming.shack.data.model.PasswordResetRequestDTO;
 import com.gaming.shack.data.model.PasswordResetResponse;
 
 
 @Service("ShackAuthenticationResource")
 public class ShackAuthenticationResource implements IShackAuthenticationResource{
 	
-	private static final Logger LOGGER = LogManager.getLogger(ShackAuthenticationResource.class);
 	
 	@Autowired
 	private IAuthenticationService authenticationService;
@@ -70,6 +68,20 @@ public class ShackAuthenticationResource implements IShackAuthenticationResource
 		}
 		
 		return response;
+		
+	}
+	@Override
+	public List<String> resetPassword(PasswordResetRequestDTO resetRequestDTO) throws ShackResourceException {
+
+		try{
+			
+			authenticationService.resetPassword(resetRequestDTO);
+			
+		}catch (ShackServiceException e) {
+			throw new ShackResourceException("114", "Error in resetPassword");
+		}
+		
+		return Collections.emptyList();
 		
 	}
 

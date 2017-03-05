@@ -22,6 +22,7 @@ import com.gaming.shack.data.enums.MemberStatusEnum;
 import com.gaming.shack.data.model.LoginBaseDTO;
 import com.gaming.shack.data.model.LoginDTO;
 import com.gaming.shack.data.model.LoginResponse;
+import com.gaming.shack.data.model.PasswordResetRequestDTO;
 import com.gaming.shack.data.model.PasswordResetResponse;
 
 @Service
@@ -87,7 +88,7 @@ public class AuthenticationService implements IAuthenticationService {
 
 					// set status as locked
 					if (memberAcc.getNoOfFailAttem() >= (ShackConstant.MAX_LOGGIN_ATTEMPT - 1)) {
-						authDAO.updateMemberStatus(MemberStatusEnum.L.valueOf(), mmID);
+						authDAO.updateMemberStatus(MemberStatusEnum.L, mmID);
 					}
 
 					throw new ShackValidationException("109", "password doesnt match");
@@ -172,15 +173,16 @@ public class AuthenticationService implements IAuthenticationService {
 				throw new ShackValidationException("121", "For the given activation id ,member id not found");
 			}
 
+			// 3. validate member status
 			MemberStatusEnum memberStatus = memMaster.getMemberStatus();
 			AuthenticationHelper.validateForgotPwdMemberStatus(memberStatus);
 
-			// 3. check if the given tracking id was used already
+			// 4. check if the given tracking id was used already
 			if(memberActivation.getActivationTime() !=null){
 				throw new ShackValidationException("122", "This activatin link has been used already");
 			}
 			
-			// 4. Validate the activation request expiration time
+			// 5. Validate the activation request expiration time
 			Date expTime = memberActivation.getExpiryTime();
 
 			if (expTime.before(new Date(System.currentTimeMillis()))) {
@@ -201,4 +203,63 @@ public class AuthenticationService implements IAuthenticationService {
 		return response;
 	}
 
+	@ShackRTX
+	@Override
+	public void resetPassword(PasswordResetRequestDTO resetRequestDTO)
+			throws ShackServiceException, ShackValidationException {
+
+		try {
+
+			// 1. check if activation ID exist
+			MemberActivation memberActivation = authDAO.findMemberActivByUniqueId(resetRequestDTO.getTrackingID());
+
+			if (memberActivation == null) {
+				throw new ShackValidationException("120", "given activation id not found");
+			}
+
+			// 2. check for valid member
+			MemberMaster memMaster = memberActivation.getMemberMaster();
+
+			if (memMaster == null) {
+				throw new ShackValidationException("121", "For the given activation id ,member id not found");
+			}
+
+			// 3. validate member status
+			MemberStatusEnum memberStatus = memMaster.getMemberStatus();
+			AuthenticationHelper.validateForgotPwdMemberStatus(memberStatus);
+
+			// 4. check if the given tracking id was used already
+			if(memberActivation.getActivationTime() !=null){
+				throw new ShackValidationException("122", "This activatin link has been used already");
+			}
+			
+			// 5. Validate the activation request expiration time
+			Date expTime = memberActivation.getExpiryTime();
+
+			if (expTime.before(new Date(System.currentTimeMillis()))) {
+				throw new ShackValidationException("123", "Activation id is expired");
+			}
+
+			//6.update memberAccount, memberMaster and member activity tables.
+			
+			// set new values
+			AuthenticationHelper.populateMemberMasterForPasswordReset(memMaster);
+			MemberAccount memAccount =  memMaster.getMemberAccount();
+			AuthenticationHelper.poulateMemberAccountForPasswordReset(memAccount, resetRequestDTO.getPasscode());
+			AuthenticationHelper.poulateMemberActivationForPasswordReset(memberActivation);
+			
+			//update activating time to current time
+			authDAO.update(memberActivation);
+			//update new password, last password reset time and noOfFailAttempt=0
+			authDAO.update(memAccount);
+			//update status to ACTIVE if prior status is locked
+			authDAO.update(memMaster);
+			
+
+		} catch (ShackDAOException e) {
+			throw new ShackServiceException("AUTH_SERV_ERR", "exception in resetPasswordPreCheck");
+		}
+
+		
+	}
 }
