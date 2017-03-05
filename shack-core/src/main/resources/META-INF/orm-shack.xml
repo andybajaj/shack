@@ -40,10 +40,16 @@
      	</query>
 	</named-query>
 	
-	
 	<named-query name="MemberActivation.findMemberActivationByUniqueID">
 		<query>
 		  select m from MemberActivation m where m.uniqueID =:uniqueId
      	</query>
+	</named-query>
+	
+	<named-query name="MemberMaster.readBasicProfile">
+		<query>  select distinct m from MemberMaster m  join fetch m.membershipTypeXs  s where m.memberID=:memberID and CURRENT_DATE 
+		         between s.startDate and s.expiryDate order by s.expiryDate
+	 </query>
+
 	</named-query>
 </entity-mappings>
