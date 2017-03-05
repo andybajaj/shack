@@ -24,11 +24,11 @@ import com.gaming.shack.core.utils.Log4ThreadContext;
  * The Class JobsLibMessageHandler.
  */
 @Provider
-@Priority(0)
-public class CORSRequestFilter implements  ContainerRequestFilter {
+@Priority(1)
+public class ShackRequestFilter implements  ContainerRequestFilter {
 	
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LogManager.getLogger(CORSRequestFilter.class);
+	private static final Logger LOGGER = LogManager.getLogger(ShackRequestFilter.class);
 	
 	/** The headers. */
 	@Context
@@ -43,17 +43,6 @@ public class CORSRequestFilter implements  ContainerRequestFilter {
 		Log4ThreadContext.addFishTagging(requestCtx.getUriInfo().getPath());
 		LOGGER.info( "Executing REST request filter" );
         // When HttpMethod comes as OPTIONS, just acknowledge that it accepts...
-        if ( requestCtx.getRequest().getMethod().equals( "OPTIONS" ) ) {
-        	LOGGER.info( "HTTP Method (OPTIONS) - Detected!" );
-            // Just send a OK signal back to the browser
-        	
-            requestCtx.abortWith( Response.status( Response.Status.OK ).header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Headers", "origin, content-type, accept,crossdomain")
-                    .header("Access-Control-Allow-Credentials", "true")
-                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                    .header("Access-Control-Max-Age", "1209600").
-            		build() );
-           
-        }
+     
     }
 }

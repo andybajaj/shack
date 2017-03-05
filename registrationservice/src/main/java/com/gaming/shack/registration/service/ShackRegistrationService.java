@@ -152,6 +152,7 @@ public class ShackRegistrationService implements IShackRegistrationService {
 			for(MembershipTypeX membershipTypeX :memberMaster.getMembershipTypeXs()){
 				memberProfileDTO.setMembershipType(membershipTypeX.getMembershipTypeDetail().getMembershipDescription());
 				memberProfileDTO.setMembershipExpiryDate(membershipTypeX.getExpiryDate());
+				break;
 			}
 			return memberProfileDTO;
 		} catch (ShackDAOException e) {
