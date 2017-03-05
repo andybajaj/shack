@@ -17,6 +17,7 @@ public class OptIn implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="OPID")
 	private Long opid;
 
@@ -44,7 +45,7 @@ public class OptIn implements Serializable {
 
 	//bi-directional many-to-one association to MemberMaster
 	@ManyToOne
-	@JoinColumn(name="MMID")
+	@JoinColumn(name="MMID" , referencedColumnName="MMID")
 	private MemberMaster memberMaster;
 
 	public OptIn() {

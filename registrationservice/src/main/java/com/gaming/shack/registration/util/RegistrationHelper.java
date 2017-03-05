@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.gaming.shack.core.constants.ShackResourceConstants;
@@ -11,12 +12,15 @@ import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.utils.DateFormatterUtils;
 import com.gaming.shack.data.entity.registration.Address;
 import com.gaming.shack.data.entity.registration.MemberMaster;
+import com.gaming.shack.data.entity.registration.OptIn;
 import com.gaming.shack.data.enums.AddressType;
 import com.gaming.shack.data.enums.MemberStatusEnum;
+import com.gaming.shack.data.enums.OptionInType;
 import com.gaming.shack.data.model.MemberAddressDTO;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberDetailsDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
+import com.gaming.shack.data.model.OptInDTO;
 
 /**
  * The helper class for the registration
@@ -54,8 +58,19 @@ public class RegistrationHelper {
 			
 			entity.setTelephoneCountryCode(memberProfile.getPhoneNumberCountryCode());
 			entity.setTelephoneNumber(memberProfile.getPhoneNumber());
-			entity.setProfilePictureURI(memberProfile.getProfilePictureUri());
+			
+			if (member.getMemberDetails() !=null && 
+					!StringUtils.isEmpty(member.getMemberDetails().getProfilePictureUri())) {
+				entity.setProfilePictureURI(member.getMemberDetails().getProfilePictureUri());
+			}
+			
+			if (!StringUtils.isEmpty(memberProfile.getMiddleName())) {
+				entity.setMiddleName(memberProfile.getMiddleName());
+			}
+			
 			populateAddresses(member.getMemberDetails(), entity);
+			
+			populateOptionsInSelected(member.getMemberDetails() , entity) ;
 			
 			return entity;
 		} catch(Exception e) {
@@ -63,6 +78,7 @@ public class RegistrationHelper {
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MSG, e);
 		}
 	}
+	
 
 	/**
 	 * 
@@ -82,7 +98,26 @@ public class RegistrationHelper {
 			entity.setAddresses(addresses);
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param memberDetails
+	 */
+	private void populateOptionsInSelected(MemberDetailsDTO memberDetails , MemberMaster entity) { 
+		List<OptIn> optIns = new ArrayList<OptIn>();
+		
+		if(memberDetails.getOptInSelected() !=null && !memberDetails.getOptInSelected().isEmpty()) {
+			for (OptInDTO optionIn : memberDetails.getOptInSelected()) {
+				optIns.add(createOptionInEntity(optionIn , entity ,  getOptionNumberVal(optionIn.getOptIn()))) ;
+			}
+		}
+		
+		if (!optIns.isEmpty()) {
+			entity.setOptIns(optIns);
+		}
+	}		
+		
+	
 	/**
 	 * 
 	 * @param addressInput
@@ -106,10 +141,45 @@ public class RegistrationHelper {
 	
 	/**
 	 * 
+	 * @param optionIn
+	 * @param entity
+	 * @param optionValue
+	 * @return
+	 */
+	private OptIn createOptionInEntity(OptInDTO optionIn, MemberMaster entity , int  optionValue) {
+		OptIn optIn = new OptIn() ;
+		optIn.setOptTypeID(new Long(optionValue));
+		optIn.setStatus(MemberStatusEnum.A.toString());
+		optIn.setCreateBy(RegistrationUtil.getLoggedInUserId());
+		optIn.setUpdateBy(RegistrationUtil.getLoggedInUserId());
+		optIn.setMemberMaster(entity);
+		return optIn ;
+	}
+	
+	/**
+	 * 
 	 * @return
 	 */
 	public Long generateMemberId() {
 		int randomNum = Math.abs(ThreadLocalRandom.current().nextInt(Integer.MIN_VALUE, Integer.MAX_VALUE));
 		return new Long(randomNum) ; 
+	}
+	
+	/**
+	 * 
+	 * @param optionLabel
+	 * @return
+	 */
+	private int getOptionNumberVal(String optionLabel) {
+		for (OptionInType optionInType : OptionInType.values()) {
+			if  (optionInType.getOptionLabel().equalsIgnoreCase(optionLabel)) {
+				return optionInType.getOptionValue() ;
+			}
+		}
+		/**
+		 * Shouldn't get here a as the validation will catch and throw error
+		 * before this level
+		 */
+		return 0 ;
 	}
 }
