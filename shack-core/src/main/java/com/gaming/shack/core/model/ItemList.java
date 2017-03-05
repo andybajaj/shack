@@ -123,7 +123,7 @@ public class ItemList<T> implements Serializable {
 		}
 	}
 	
-	public void setItems(T items1) {
+	/*public void setItems(T items1) {
 		if (items1 == null) {
 			return;
 		}
@@ -137,7 +137,7 @@ public class ItemList<T> implements Serializable {
 		if (items != null) {
 			count = items.size();
 		}
-	}
+	}*/
 	
 	/*
 	 * (non-Javadoc)

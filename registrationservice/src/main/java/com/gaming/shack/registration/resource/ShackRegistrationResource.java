@@ -16,8 +16,9 @@ import com.gaming.shack.core.exception.ShackResourceException;
 import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.core.model.ItemList;
+import com.gaming.shack.data.enums.ProfileType;
+import com.gaming.shack.data.model.BasicMemberProfileDTO;
 import com.gaming.shack.data.model.MemberDTO;
-import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
 import com.gaming.shack.registration.service.IShackRegistrationService;
  
@@ -69,13 +70,13 @@ public class ShackRegistrationResource implements IShackRegistrationResource {
 		  "channelId":18 
 		}
 	 */
-	public ItemList<MemberDTO> addMemberMaster(MemberDTO memberIn) throws ShackValidationException , ShackResourceException {
+	public MemberDTO addMemberMaster(MemberDTO memberIn) throws ShackValidationException , ShackResourceException {
 		try {
 			LOGGER.info("addMemberMaster api called");
 			MemberDTO member = shackRegistrationService.addMemberMaster(memberIn) ; 
-			ItemList<MemberDTO> items = new ItemList<>();
-			items.setItems(member);
-			return items ;
+			
+			
+			return member ;
 		} catch(ShackValidationException sve) {
 			throw sve ;
 		} 
@@ -83,6 +84,24 @@ public class ShackRegistrationResource implements IShackRegistrationResource {
 			throw new ShackResourceException("101", "Error in addMemberMaster" ,e);
 		}
 	}
+
+	@Override
+	public BasicMemberProfileDTO readBasicProfile(UriInfo ui, String profileType, Long memberId)
+			throws ShackResourceException {
+		
+		try {
+			if(ProfileType.toEnum(profileType)==ProfileType.BASIC){
+				return shackRegistrationService.readMemberBasicProfile(memberId);
+			}
+		} catch (ShackServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+	
 	
 	
 }

@@ -17,7 +17,10 @@ import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.MemberMaster;
+import com.gaming.shack.data.entity.registration.MembershipTypeX;
 import com.gaming.shack.data.entity.registration.SiteMaster;
+import com.gaming.shack.data.enums.MemberType;
+import com.gaming.shack.data.model.BasicMemberProfileDTO;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.UserDTO;
@@ -126,5 +129,39 @@ public class ShackRegistrationService implements IShackRegistrationService {
 			}
 		}		
 	}
+
+	@Override
+	@ShackRTX
+	public BasicMemberProfileDTO readMemberBasicProfile(Long memberId) throws ShackServiceException {
+		
+		try {
+			MemberMaster memberMaster=memberDAO.readBasicProfile(memberId);
+			BasicMemberProfileDTO memberProfileDTO = new BasicMemberProfileDTO();
+			memberProfileDTO.setMemberId(memberId);
+			memberProfileDTO.setFirstName(memberMaster.getGivenName());
+			memberProfileDTO.setLastName(memberMaster.getSurname());
+			memberProfileDTO.setMiddleName(memberMaster.getMiddleName());
+			memberProfileDTO.setNameTitle(memberMaster.getNameTitle());
+			memberProfileDTO.setEmailId(memberMaster.getEmailaddress());
+			memberProfileDTO.setPhoneNumber(memberMaster.getTelephoneCountryCode()+memberMaster.getTelephoneNumber());
+			memberProfileDTO.setLeftHanded(memberMaster.getIsLeft()==0?Boolean.FALSE:Boolean.TRUE);
+			memberProfileDTO.setPreferredSite(memberMaster.getSiteMaster().getCityName()+","+memberMaster.getSiteMaster().getStateProv());
+			memberProfileDTO.setMemberType(MemberType.toEnum(memberMaster.getMemberTypeID().intValue()).name());
+			memberProfileDTO.setMemberSince(memberMaster.getCreateDate());
+			memberProfileDTO.setParentMemberId(memberMaster.getParentMemberID());
+			for(MembershipTypeX membershipTypeX :memberMaster.getMembershipTypeXs()){
+				memberProfileDTO.setMembershipType(membershipTypeX.getMembershipTypeDetail().getMembershipDescription());
+				memberProfileDTO.setMembershipExpiryDate(membershipTypeX.getExpiryDate());
+			}
+			return memberProfileDTO;
+		} catch (ShackDAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	
 
 }

@@ -37,6 +37,8 @@ import com.gaming.shack.data.enums.MemberStatusEnum;
 @DynamicUpdate
 @NamedQuery(name="MemberMaster.findAll", query="SELECT m FROM MemberMaster m")
 public class MemberMaster implements Serializable {
+	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -496,6 +498,14 @@ public class MemberMaster implements Serializable {
 		socialmedia.setMemberMaster(null);
 
 		return socialmedia;
+	}
+	
+	public byte getIsLeft() {
+		return isLeft;
+	}
+
+	public void setIsLeft(byte isLeft) {
+		this.isLeft = isLeft;
 	}
 
 	@Override

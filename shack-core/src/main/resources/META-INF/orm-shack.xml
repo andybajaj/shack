@@ -41,7 +41,8 @@
 	</named-query>
 	
 	<named-query name="MemberMaster.readBasicProfile">
-		<query>  select m from MemberMaster m  join fetch m.membershipTypeXs  where m.memberID=:memberID
+		<query>  select distinct m from MemberMaster m  join fetch m.membershipTypeXs  s where m.memberID=:memberID and CURRENT_DATE 
+		         between s.startDate and s.expiryDate order by s.expiryDate
 	  </query>
 	</named-query>
 </entity-mappings>
