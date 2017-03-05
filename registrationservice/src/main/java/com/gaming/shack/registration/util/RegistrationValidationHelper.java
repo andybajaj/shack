@@ -176,18 +176,25 @@ public class RegistrationValidationHelper {
 	 * @throws ShackValidationException
 	 */
 	private void validateMembership(MemberProfileDTO memberProfile) throws ShackValidationException {
-		if (memberProfile.getMembershipType() <= 0) {
+		if (memberProfile.getMembershipType() ==null || memberProfile.getMembershipType() <= 0) {
 			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERSHIPTYPE);
 		}
-
-		if (memberProfile.getMemberType() <= 0) {
+		
+		MembershipType selectedMembershipType = getMembershipType( memberProfile.getMembershipType().intValue()) ;
+		
+		if (selectedMembershipType == null) {
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERSHIPTYPE_NOT_DEFINED);
+		}
+		
+		if (memberProfile.getMemberType()  == null || memberProfile.getMemberType() <= 0) {
 			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERTYPE);
 		}
 
 		
-		MemberType selectedMemType = getMemberType(memberProfile.getMemberType());
+		MemberType selectedMemType = getMemberType(memberProfile.getMemberType().intValue());
 		if (selectedMemType == null) {
 			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERTYPE_NOT_DEFINED);
@@ -294,4 +301,5 @@ public class RegistrationValidationHelper {
 		}
 		return null;
 	}
+		
 }

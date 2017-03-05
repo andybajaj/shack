@@ -18,6 +18,7 @@ public class MembershipTypeX implements Serializable {
 
 	@Id
 	@Column(name="MXID")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long mxid;
 
 	@Column(name="CreateBy")
@@ -42,12 +43,12 @@ public class MembershipTypeX implements Serializable {
 
 	//bi-directional many-to-one association to MemberMaster
 	@ManyToOne
-	@JoinColumn(name="MMID")
+	@JoinColumn(name="MMID" , referencedColumnName="MMID")
 	private MemberMaster memberMaster;
 
 	//bi-directional many-to-one association to MembershipTypeDetail
 	@ManyToOne
-	@JoinColumn(name="MTID")
+	@JoinColumn(name="MTID" , referencedColumnName="MTID")
 	private MembershipTypeDetail membershipTypeDetail;
 
 	public MembershipTypeX() {

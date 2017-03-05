@@ -30,8 +30,8 @@ public class MemberProfileDTO implements Serializable {
 	 * The SMID
 	 */
 	private Long preferredSite ; 
-	private int membershipType ; 
-	private int memberType ;
+	private Long membershipType ; 
+	private Long memberType ;
 	private String termConditionVersion ;
 	private String encodedPassword ; 
 	
@@ -131,19 +131,19 @@ public class MemberProfileDTO implements Serializable {
 		this.preferredSite = preferredSite;
 	}
 
-	public int getMembershipType() {
+	public Long getMembershipType() {
 		return membershipType;
 	}
 
-	public void setMembershipType(int membershipType) {
+	public void setMembershipType(Long membershipType) {
 		this.membershipType = membershipType;
 	}
 
-	public int getMemberType() {
+	public Long getMemberType() {
 		return memberType;
 	}
 
-	public void setMemberType(int memberType) {
+	public void setMemberType(Long memberType) {
 		this.memberType = memberType;
 	}
 
