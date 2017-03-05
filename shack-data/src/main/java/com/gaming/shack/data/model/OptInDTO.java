@@ -1,24 +1,27 @@
 package com.gaming.shack.data.model;
 
+/**
+ * 
+ * @author shahnawf
+ *
+ */
 public class OptInDTO {
-	private String optTypeId ; 
-	private String status ;
-	public String getOptTypeId() {
-		return optTypeId;
+	
+	private String optIn ;
+
+	public String getOptIn() {
+		return optIn;
 	}
-	public void setOptTypeId(String optTypeId) {
-		this.optTypeId = optTypeId;
+
+	public void setOptIn(String optIn) {
+		this.optIn = optIn;
 	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
+
 	@Override
 	public String toString() {
-		return "OptInDTO [optTypeId=" + optTypeId + ", status=" + status + "]";
+		return "OptInDTO [optIn=" + optIn + "]";
 	}
 	
+		
 	
 }

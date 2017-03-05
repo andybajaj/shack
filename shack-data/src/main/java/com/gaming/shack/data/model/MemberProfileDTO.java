@@ -47,8 +47,7 @@ public class MemberProfileDTO implements Serializable {
 	private Long tcTemplateId ;
 	
 	private Long cardBarCode ; 
-	
-	private String profilePictureUri ;
+		
 	
 	public String getFirstName() {
 		return firstName;
@@ -209,15 +208,7 @@ public class MemberProfileDTO implements Serializable {
 		this.cardBarCode = cardBarCode;
 	}
 	
-	
-	public String getProfilePictureUri() {
-		return profilePictureUri;
-	}
-
-	public void setProfilePictureUri(String profilePictureUri) {
-		this.profilePictureUri = profilePictureUri;
-	}
-
+		
 	@Override
 	public String toString() {
 		return "MemberProfileDTO [firstName=" + firstName + ", lastName=" + lastName + ", middleName=" + middleName
@@ -227,9 +218,7 @@ public class MemberProfileDTO implements Serializable {
 				+ membershipType + ", memberType=" + memberType + ", termConditionVersion=" + termConditionVersion
 				+ ", encodedPassword=" + encodedPassword + ", parentMemberId=" + parentMemberId + ", memberId="
 				+ memberId + ", channelId=" + channelId + ", tcTemplateId=" + tcTemplateId + ", cardBarCode="
-				+ cardBarCode + ", profilePictureUri=" + profilePictureUri + "]";
+				+ cardBarCode + "]";
 	}
-	
-	
-	
+			
 }

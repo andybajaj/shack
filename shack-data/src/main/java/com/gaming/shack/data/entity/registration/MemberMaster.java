@@ -139,7 +139,7 @@ public class MemberMaster implements Serializable {
 	private List<MembershipTypeX> membershipTypeXs;
 
 	//bi-directional many-to-one association to OptIn
-	@OneToMany(mappedBy="memberMaster")
+	@OneToMany(mappedBy="memberMaster" , fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
 	private List<OptIn> optIns;
 
 	//bi-directional many-to-one association to Socialmedia

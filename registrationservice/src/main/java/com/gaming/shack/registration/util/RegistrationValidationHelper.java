@@ -15,10 +15,12 @@ import com.gaming.shack.data.entity.registration.SiteMaster;
 import com.gaming.shack.data.enums.ChannelType;
 import com.gaming.shack.data.enums.MemberType;
 import com.gaming.shack.data.enums.MembershipType;
+import com.gaming.shack.data.enums.OptionInType;
 import com.gaming.shack.data.model.MemberAddressDTO;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberDetailsDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
+import com.gaming.shack.data.model.OptInDTO;
 import com.gaming.shack.registration.constants.RegistrationConstants;
 
 /**
@@ -80,9 +82,11 @@ public class RegistrationValidationHelper {
 
 		validateMembership(memberProfile);
 		validateMemberAddress(member.getMemberDetails());
+		
+		validateSelectedOptions(member.getMemberDetails()) ;
 
 	}
-
+	
 	/**
 	 * 
 	 * @param channelId
@@ -114,7 +118,40 @@ public class RegistrationValidationHelper {
 			memberProfile.setEmailId(null);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param memberDetails
+	 */
+	private void validateSelectedOptions(MemberDetailsDTO memberDetails) throws ShackValidationException {
+		if (memberDetails != null && memberDetails.getOptInSelected() != null
+				&& !memberDetails.getOptInSelected().isEmpty()) {
+			
+			for (OptInDTO option : memberDetails.getOptInSelected()) {
+				if (!isOptionInTypeExists(option.getOptIn())) {
+					throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+							ShackResourceConstants.ERROR_CODE_ADD_PARENT_OPTIONTYPE_IN);
+				}
+			}
+		}
 
+	}
+	
+	/**
+	 * 
+	 * @param optionLabel
+	 * @return
+	 */
+	private boolean isOptionInTypeExists(String optionLabel) {
+		for (OptionInType optionInType : OptionInType.values()) {
+			if  (optionInType.getOptionLabel().equalsIgnoreCase(optionLabel)) {
+				return true ;
+			}
+		}
+		
+		return false ;
+	}
+	
 	/**
 	 * 
 	 * @param siteMaster
