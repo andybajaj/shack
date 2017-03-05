@@ -17,9 +17,9 @@ public class MemberDetailsDTO implements Serializable {
 	private static final long serialVersionUID = -7150913610867793054L;
 	
 	private String faceBookId ; 
-	private String profilePictureId ; 
+	private String profilePictureUri ;
 	
-	private List<OptInDTO> optIns ;
+	private List<OptInDTO> optInSelected ;
 	
 	private MemberAddressDTO mailAddress ; 
 	
@@ -33,23 +33,24 @@ public class MemberDetailsDTO implements Serializable {
 		this.faceBookId = faceBookId;
 	}
 
-	public String getProfilePictureId() {
-		return profilePictureId;
-	}
-
-	public void setProfilePictureId(String profilePictureId) {
-		this.profilePictureId = profilePictureId;
-	}
-
-	public List<OptInDTO> getOptIns() {
-		return optIns;
-	}
-
-	public void setOptIns(List<OptInDTO> optIns) {
-		this.optIns = optIns;
-	}
 	
+	public String getProfilePictureUri() {
+		return profilePictureUri;
+	}
+
+	public void setProfilePictureUri(String profilePictureUri) {
+		this.profilePictureUri = profilePictureUri;
+	}
+
 	
+	public List<OptInDTO> getOptInSelected() {
+		return optInSelected;
+	}
+
+	public void setOptInSelected(List<OptInDTO> optInSelected) {
+		this.optInSelected = optInSelected;
+	}
+
 	public MemberAddressDTO getMailAddress() {
 		return mailAddress;
 	}
@@ -68,8 +69,8 @@ public class MemberDetailsDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MemberDetailsDTO [faceBookId=" + faceBookId + ", profilePictureId=" + profilePictureId + ", optIns="
-				+ optIns + ", mailAddress=" + mailAddress + ", billingAddress=" + billingAddress + "]";
+		return "MemberDetailsDTO [faceBookId=" + faceBookId + ", profilePictureUri=" + profilePictureUri + ", optInSelected="
+				+ optInSelected + ", mailAddress=" + mailAddress + ", billingAddress=" + billingAddress + "]";
 	} 
 	
 	

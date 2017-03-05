@@ -5,21 +5,27 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gaming.shack.core.constants.ShackResourceConstants;
+import com.gaming.shack.core.exception.ShackDAOException;
 import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.core.utils.DateFormatterUtils;
 import com.gaming.shack.data.entity.registration.Channel;
+import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.entity.registration.SiteMaster;
 import com.gaming.shack.data.enums.ChannelType;
 import com.gaming.shack.data.enums.MemberType;
 import com.gaming.shack.data.enums.MembershipType;
+import com.gaming.shack.data.enums.OptionInType;
 import com.gaming.shack.data.model.MemberAddressDTO;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberDetailsDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
+import com.gaming.shack.data.model.OptInDTO;
 import com.gaming.shack.registration.constants.RegistrationConstants;
+import com.gaming.shack.registration.dao.IMemberMasterDAO;
 
 /**
  * The helper class for the registration
@@ -31,13 +37,16 @@ import com.gaming.shack.registration.constants.RegistrationConstants;
 public class RegistrationValidationHelper {
 
 	private static final Logger LOGGER = LogManager.getLogger(RegistrationValidationHelper.class);
-
+	
+	@Autowired
+	private IMemberMasterDAO<MemberMaster, Long> memberDAO;
+	
 	/**
 	 * 
 	 * @param memberProfile
 	 * @throws ShackValidationException
 	 */
-	public void validateMemberProfile(MemberDTO member) throws ShackValidationException {
+	public void validateMemberProfile(MemberDTO member) throws ShackValidationException , ShackDAOException {
 
 		MemberProfileDTO memberProfile = member.getMemberProfile();
 
@@ -75,20 +84,28 @@ public class RegistrationValidationHelper {
 		if (memberProfile.getCardBarCode() == null || memberProfile.getCardBarCode() <= 0) {
 			throw new ShackValidationException(validationErrorCode, ShackResourceConstants.ERROR_CODE_ADD_CARDBARCODE);
 		}
-
+		
+		MemberMaster memberForBarCode = memberDAO.findMemberByCardBarCode(memberProfile.getCardBarCode());
+		if (memberForBarCode != null) {
+			throw new ShackValidationException(validationErrorCode,
+					ShackResourceConstants.ERROR_CODE_ADD_CARDBARCODE_EXISTS);
+		}
+		
 		validateEmailAndChannel(memberProfile);
 
 		validateMembership(memberProfile);
 		validateMemberAddress(member.getMemberDetails());
+		
+		validateSelectedOptions(member.getMemberDetails()) ;
 
 	}
-
+	
 	/**
 	 * 
 	 * @param channelId
 	 * @throws ShackValidationException
 	 */
-	private void validateEmailAndChannel(MemberProfileDTO memberProfile) throws ShackValidationException {
+	private void validateEmailAndChannel(MemberProfileDTO memberProfile) throws ShackValidationException, ShackDAOException {
 
 		ChannelType selectedChannelType = null;
 		for (ChannelType channelType : ChannelType.values()) {
@@ -112,9 +129,48 @@ public class RegistrationValidationHelper {
 
 		if (StringUtils.isEmpty(memberProfile.getEmailId())) {
 			memberProfile.setEmailId(null);
+		} else {
+			MemberMaster emailMember = memberDAO.findMemberByEmail(memberProfile.getEmailId()) ;
+			if (emailMember !=null) {
+				throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+						ShackResourceConstants.ERROR_CODE_ADD_EMAIL_EXISTS);
+			}
 		}
 	}
+	
+	/**
+	 * 
+	 * @param memberDetails
+	 */
+	private void validateSelectedOptions(MemberDetailsDTO memberDetails) throws ShackValidationException {
+		if (memberDetails != null && memberDetails.getOptInSelected() != null
+				&& !memberDetails.getOptInSelected().isEmpty()) {
+			
+			for (OptInDTO option : memberDetails.getOptInSelected()) {
+				if (!isOptionInTypeExists(option.getOptIn())) {
+					throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+							ShackResourceConstants.ERROR_CODE_ADD_PARENT_OPTIONTYPE_IN);
+				}
+			}
+		}
 
+	}
+	
+	/**
+	 * 
+	 * @param optionLabel
+	 * @return
+	 */
+	private boolean isOptionInTypeExists(String optionLabel) {
+		for (OptionInType optionInType : OptionInType.values()) {
+			if  (optionInType.getOptionLabel().equalsIgnoreCase(optionLabel)) {
+				return true ;
+			}
+		}
+		
+		return false ;
+	}
+	
 	/**
 	 * 
 	 * @param siteMaster
@@ -139,18 +195,25 @@ public class RegistrationValidationHelper {
 	 * @throws ShackValidationException
 	 */
 	private void validateMembership(MemberProfileDTO memberProfile) throws ShackValidationException {
-		if (memberProfile.getMembershipType() <= 0) {
+		if (memberProfile.getMembershipType() ==null || memberProfile.getMembershipType() <= 0) {
 			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERSHIPTYPE);
 		}
-
-		if (memberProfile.getMemberType() <= 0) {
+		
+		MembershipType selectedMembershipType = getMembershipType( memberProfile.getMembershipType().intValue()) ;
+		
+		if (selectedMembershipType == null) {
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERSHIPTYPE_NOT_DEFINED);
+		}
+		
+		if (memberProfile.getMemberType()  == null || memberProfile.getMemberType() <= 0) {
 			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERTYPE);
 		}
 
 		
-		MemberType selectedMemType = getMemberType(memberProfile.getMemberType());
+		MemberType selectedMemType = getMemberType(memberProfile.getMemberType().intValue());
 		if (selectedMemType == null) {
 			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MEMBERTYPE_NOT_DEFINED);
@@ -257,4 +320,5 @@ public class RegistrationValidationHelper {
 		}
 		return null;
 	}
+		
 }

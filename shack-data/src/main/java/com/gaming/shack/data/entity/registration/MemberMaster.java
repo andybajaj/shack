@@ -135,11 +135,11 @@ public class MemberMaster implements Serializable {
 	private SiteMaster siteMaster;
 
 	//bi-directional many-to-one association to MembershipTypeX
-	@OneToMany(mappedBy="memberMaster")
+	@OneToMany(mappedBy="memberMaster" , fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
 	private List<MembershipTypeX> membershipTypeXs;
 
 	//bi-directional many-to-one association to OptIn
-	@OneToMany(mappedBy="memberMaster")
+	@OneToMany(mappedBy="memberMaster" , fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
 	private List<OptIn> optIns;
 
 	//bi-directional many-to-one association to Socialmedia

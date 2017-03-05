@@ -20,6 +20,7 @@ import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.entity.registration.SiteMaster;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
+import com.gaming.shack.data.model.MemberSuccess;
 import com.gaming.shack.data.model.UserDTO;
 import com.gaming.shack.registration.dao.IChannelDAO;
 import com.gaming.shack.registration.dao.IMemberMasterDAO;
@@ -72,7 +73,7 @@ public class ShackRegistrationService implements IShackRegistrationService {
 
 	@Override
 	@ShackRTX
-	public MemberDTO addMemberMaster(MemberDTO member) throws ShackValidationException, ShackServiceException {
+	public MemberSuccess addMemberMaster(MemberDTO member) throws ShackValidationException, ShackServiceException {
 		try {
 			/**
 			 * The advanced validations will be added here
@@ -95,7 +96,7 @@ public class ShackRegistrationService implements IShackRegistrationService {
 
 			memberDAO.add(memberMaster);
 
-			return member;
+			return new MemberSuccess(memberMaster.getMmid());			
 
 		} catch (ShackValidationException sve) {
 			LOGGER.error("Validation error occured in addMemberMaster", sve);

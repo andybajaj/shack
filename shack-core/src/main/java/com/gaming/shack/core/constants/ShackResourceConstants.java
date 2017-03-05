@@ -40,4 +40,9 @@ public class ShackResourceConstants {
 	public static final String ERROR_CODE_ADD_INVALID_MEMTYPE_FOR_NONMINOR = "Invalid member type for non-minor" ;
 	public static final String ERROR_CODE_ADD_PARENT_MEMBERID = "Parent member id required" ;
 	public static final String ERROR_CODE_ADD_PARENT_MEMBEPER_NOT_IN_SYSTEM = "Parent member id not found in system" ;
+	
+	public static final String ERROR_CODE_ADD_PARENT_OPTIONTYPE_IN = "Invalid option in selected" ;
+	
+	public static final String ERROR_CODE_ADD_CARDBARCODE_EXISTS = "Bar code already exists" ;
+	public static final String ERROR_CODE_ADD_EMAIL_EXISTS = "Email already exists" ;
 }

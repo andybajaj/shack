@@ -21,6 +21,24 @@ import com.gaming.shack.data.entity.registration.MemberMaster;
 public class MemberMasterDAO extends ShackBaseDao<MemberMaster, Serializable>
 		implements IMemberMasterDAO<MemberMaster, Serializable> {
 	
+	@Override
+	public MemberMaster readBasicProfile(Long memberId) throws ShackDAOException{
+		
+		MemberMaster memberMaster = null;
+		try {
+			EntityManager em = getEntityManager(com.gaming.shack.core.enums.DataSourceType.SHACK);
+			Query query = em.createNamedQuery("MemberMaster.readBasicProfile");
+			
+            query.setParameter("memberID", memberId);
+			memberMaster = (MemberMaster) query.getSingleResult();
+
+		} catch (Exception e) {
+			LOGGER.error("exception in readBasicProfile", e);
+			throw new ShackDAOException("101", "exception in readBasicProfile...", e);
+		}
+		return memberMaster;
+	}
+
 	/**
 	 * public constructor
 	 */
@@ -42,6 +60,35 @@ public class MemberMasterDAO extends ShackBaseDao<MemberMaster, Serializable>
 			throw new ShackDAOException("MEM_DAO_ERR", "exception in findChannelById", e);
 		}
 	}
-	
-	
+
+	@Override
+	public MemberMaster findMemberByEmail(String email) throws ShackDAOException {
+		try {
+
+			EntityManager em = getEntityManager(DataSourceType.SHACK);
+			Query query = em.createNamedQuery("Member.findMemberById");
+			query.setParameter("email", email);
+
+			return getSingleResult(query);
+
+		} catch (Exception e) {
+			throw new ShackDAOException("MEM_DAO_ERR", "exception in findMemberByEmail", e);
+		}
+	}
+
+	@Override
+	public MemberMaster findMemberByCardBarCode(Long barCode) throws ShackDAOException {
+		
+		try {
+			EntityManager em = getEntityManager(DataSourceType.SHACK);
+			Query query = em.createNamedQuery("Member.findMemberByCardBarCode");
+			query.setParameter("barCode", barCode);
+
+			return getSingleResult(query);
+
+		} catch (Exception e) {
+			throw new ShackDAOException("MEM_DAO_ERR", "exception in findMemberByEmail", e);
+		}
+	}
+		
 }

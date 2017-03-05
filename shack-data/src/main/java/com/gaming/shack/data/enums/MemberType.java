@@ -20,4 +20,14 @@ public enum MemberType {
 		return this.typeValue ;
 	}
 	
+	public static MemberType toEnum(int s) {
+
+		for (MemberType memberType : MemberType.values()) {
+			if (memberType.getValue()==s) {
+				return memberType;
+			}
+		}
+		return null;
+	}
+	
 }

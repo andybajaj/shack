@@ -8,6 +8,10 @@ import com.gaming.shack.data.entity.registration.MemberMaster;
 
 public interface IMemberMasterDAO<T, I extends Serializable> extends IShackBaseDao<T, I> {
 	
+
+	public MemberMaster readBasicProfile(Long memberId) throws ShackDAOException;
+
+
 	/**
 	 * 
 	 * @param memberId
@@ -15,4 +19,21 @@ public interface IMemberMasterDAO<T, I extends Serializable> extends IShackBaseD
 	 * @throws ShackDAOException
 	 */
 	public MemberMaster findMemberById(Long memberId) throws ShackDAOException;
+	
+	/**
+	 * 
+	 * @param memberId
+	 * @return
+	 * @throws ShackDAOException
+	 */
+	public MemberMaster findMemberByEmail(String email) throws ShackDAOException;
+	
+	/**
+	 * 
+	 * @param cardBarCode
+	 * @return
+	 * @throws ShackDAOException
+	 */
+	public MemberMaster findMemberByCardBarCode(Long barCode) throws ShackDAOException;
+	
 }

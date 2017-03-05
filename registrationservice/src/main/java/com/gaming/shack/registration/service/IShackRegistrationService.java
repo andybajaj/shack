@@ -8,6 +8,7 @@ import java.util.List;
 import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.data.model.MemberDTO;
+import com.gaming.shack.data.model.MemberSuccess;
 import com.gaming.shack.data.model.UserDTO;
 
 /**
@@ -30,7 +31,7 @@ public interface IShackRegistrationService {
 	 * @throws ShackValidationException
 	 * @throws ShackServiceException
 	 */
-	public MemberDTO addMemberMaster(MemberDTO member)
+	public MemberSuccess addMemberMaster(MemberDTO member)
 			throws ShackValidationException, ShackServiceException; 
 	
 
