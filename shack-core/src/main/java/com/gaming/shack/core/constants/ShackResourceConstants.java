@@ -41,8 +41,11 @@ public class ShackResourceConstants {
 	public static final String ERROR_CODE_ADD_PARENT_MEMBERID = "Parent member id required" ;
 	public static final String ERROR_CODE_ADD_PARENT_MEMBEPER_NOT_IN_SYSTEM = "Parent member id not found in system" ;
 	
-	public static final String ERROR_CODE_ADD_PARENT_OPTIONTYPE_IN = "Invalid option in selected" ;
-	
+	public static final String ERROR_CODE_ADD_PARENT_OPTIONTYPE_IN = "Invalid option in selected" ;	
 	public static final String ERROR_CODE_ADD_CARDBARCODE_EXISTS = "Bar code already exists" ;
 	public static final String ERROR_CODE_ADD_EMAIL_EXISTS = "Email already exists" ;
+	public static final String ERROR_CODE_UPDATE_MEMBERID = "Member id required" ;
+	
+	public static final String ERROR_CODE_ADD_MEMBEPER_NOT_IN_SYSTEM = "Member id not found in system" ;  
+			
 }

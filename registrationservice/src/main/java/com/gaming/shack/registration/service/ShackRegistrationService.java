@@ -55,7 +55,7 @@ public class ShackRegistrationService implements IShackRegistrationService {
 	private RegistrationValidationHelper validationhelper;
 
 	@Autowired
-	RegistrationHelper registrationHelper;
+	private RegistrationHelper registrationHelper;
 
 	/*
 	 * (non-Javadoc)
@@ -78,31 +78,20 @@ public class ShackRegistrationService implements IShackRegistrationService {
 		try {
 			
 			/**
-			 * Validate member profile
+			 * validate member profile
 			 */
 			
 			validateMemberProfile(member , OperationType.ADD);
 			
-			/**
-			 * Validate the channels and site before proceeding
-			 */
-			SiteMaster siteMaster = siteMasterDAO.findById(member.getMemberProfile().getPreferredSite());
-			Channel channel = channelDAO.findChannelById(member.getMemberProfile().getChannelId());
+			MemberMaster memberMaster = createMemberEntity(member) ;
 			
-			validationhelper.validateSiteAndChannel(siteMaster, channel);
+			memberDAO.add(memberMaster) ;
 			
-			MemberMaster memberMaster = registrationHelper.createMemberMaster(member);
-
-			memberMaster.setSiteMaster(siteMaster);
-			memberMaster.setChannel(channel);
-
-			memberDAO.add(memberMaster);
-
-			return new MemberSuccess(memberMaster.getMmid());			
+			return new MemberSuccess(memberMaster.getMmid());									
 
 		} catch (ShackValidationException sve) {
 			LOGGER.error("Validation error occured in addMemberMaster", sve);
-			throw sve;
+			throw sve;			
 		} catch (ShackServiceException sse) {
 			LOGGER.error("Error occured in addMemberMaster", sse);
 		} catch (Exception e) {
@@ -113,7 +102,37 @@ public class ShackRegistrationService implements IShackRegistrationService {
 
 		return null;
 	}
-			
+	
+	@Override
+	public MemberSuccess updateMemberMaster(MemberDTO member) throws ShackValidationException, ShackServiceException {		
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param member
+	 * @return
+	 * @throws ShackValidationException
+	 * @throws ShackDAOException
+	 * @throws ShackServiceException
+	 */
+	public MemberMaster createMemberEntity(MemberDTO member) throws ShackValidationException , ShackDAOException , ShackServiceException{
+		/**
+		 * First validate the channels and site before proceeding
+		 */
+		SiteMaster siteMaster = siteMasterDAO.findById(member.getMemberProfile().getPreferredSite());
+		Channel channel = channelDAO.findChannelById(member.getMemberProfile().getChannelId());
+
+		validationhelper.validateSiteAndChannel(siteMaster, channel);
+
+		MemberMaster memberMaster = registrationHelper.createMemberMaster(member);
+
+		memberMaster.setSiteMaster(siteMaster);
+		memberMaster.setChannel(channel);
+		
+		return memberMaster ;
+	}
+	
 	/**
 	 * 
 	 * @param member
@@ -123,7 +142,12 @@ public class ShackRegistrationService implements IShackRegistrationService {
 	private void validateMemberProfile(MemberDTO member , OperationType operationType) throws ShackValidationException , ShackDAOException {
 		
 		/**
-		 * Validate the member profile
+		 * Validate the member for the update operation 
+		 */		
+		validateMember(operationType, member.getMemberProfile());
+		
+		/**
+		 * validate the member profile
 		 */
 		validationhelper.validateMemberProfile(member);
 		
@@ -148,10 +172,30 @@ public class ShackRegistrationService implements IShackRegistrationService {
 			}
 		}		
 	}
+	
+	/**
+	 * 
+	 * @param operationType
+	 * @param memberProfile
+	 * @throws ShackValidationException
+	 * @throws ShackDAOException
+	 */
+	private void validateMember(OperationType operationType, MemberProfileDTO memberProfile)
+			throws ShackValidationException, ShackDAOException {
+		
+		if (OperationType.UPDATE == operationType) {
+			if (memberProfile.getMemberId() == null || memberProfile.getMemberId() <= 0) {
 
-	@Override
-	public MemberSuccess updateMemberMaster(MemberDTO member) throws ShackValidationException, ShackServiceException {
-		// TODO Auto-generated method stub
-		return null;
+				throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+						ShackResourceConstants.ERROR_CODE_UPDATE_MEMBERID);
+			}
+
+			MemberMaster selectedMember = memberDAO.findMemberById(memberProfile.getMemberId());
+			
+			if (selectedMember == null) {
+				throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+						ShackResourceConstants.ERROR_CODE_ADD_MEMBEPER_NOT_IN_SYSTEM);
+			}
+		}
 	}
 }
