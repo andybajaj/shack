@@ -49,7 +49,25 @@
 	<named-query name="MemberMaster.readBasicProfile">
 		<query>  select distinct m from MemberMaster m  join fetch m.membershipTypeXs  s where m.memberID=:memberID and CURRENT_DATE 
 		         between s.startDate and s.expiryDate order by s.expiryDate
-	 </query>
-
+	 </query>	
 	</named-query>
+	
+	<named-query name="Channel.findChannelById">
+		<query>
+		  select c from Channel c where c.channelID=:channelId
+     	</query>
+	</named-query>
+	
+	<named-query name="Member.findMemberByCardBarCode">
+		<query>
+		  select m from MemberMaster m where m.cardBarCode =:barCode
+     	</query>
+	</named-query>
+	
+	<!-- <named-query name="Member.deleteOptinsByMMId">
+		<query>
+		  delete from OptIn opt where opt.memberMaster.mmid=:mmId
+     	</query>
+	</named-query> -->
+	
 </entity-mappings>
