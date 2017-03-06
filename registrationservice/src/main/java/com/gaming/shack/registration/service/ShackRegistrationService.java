@@ -17,6 +17,7 @@ import com.gaming.shack.core.exception.ShackServiceException;
 import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.MemberMaster;
+import com.gaming.shack.data.entity.registration.OptIn;
 import com.gaming.shack.data.entity.registration.SiteMaster;
 import com.gaming.shack.data.enums.OperationType;
 import com.gaming.shack.data.model.MemberDTO;
@@ -68,7 +69,7 @@ public class ShackRegistrationService implements IShackRegistrationService {
 		try {
 			return shackResgistrationDao.findAllUser();
 		} catch (ShackDAOException e) {
-			throw new ShackServiceException("101", "exception in find all users" , e);
+			throw new ShackServiceException("101", "exception in find all users", e);
 		}
 	}
 
@@ -76,38 +77,54 @@ public class ShackRegistrationService implements IShackRegistrationService {
 	@ShackRTX
 	public MemberSuccess addMemberMaster(MemberDTO member) throws ShackValidationException, ShackServiceException {
 		try {
-			
+
 			/**
 			 * validate member profile
 			 */
-			
-			validateMemberProfile(member , OperationType.ADD);
-			
-			MemberMaster memberMaster = createMemberEntity(member) ;
-			
-			memberDAO.add(memberMaster) ;
-			
-			return new MemberSuccess(memberMaster.getMmid());									
+
+			validateMemberProfile(member);
+
+			MemberMaster memberMaster = createMemberEntity(member);
+
+			memberDAO.add(memberMaster);
+
+			return new MemberSuccess(memberMaster.getMmid());
 
 		} catch (ShackValidationException sve) {
 			LOGGER.error("Validation error occured in addMemberMaster", sve);
-			throw sve;			
-		} catch (ShackServiceException sse) {
-			LOGGER.error("Error occured in addMemberMaster", sse);
+			throw sve;
 		} catch (Exception e) {
 			LOGGER.error("Error occured in addMemberMaster", e);
 			throw new ShackServiceException(ShackResourceConstants.ERROR_CODE_ADD_MEMBER,
 					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MSG, e);
 		}
+	}
 
-		return null;
-	}
-	
 	@Override
-	public MemberSuccess updateMemberMaster(MemberDTO member) throws ShackValidationException, ShackServiceException {		
-		return null;
+	@ShackRTX
+	public MemberSuccess updateMemberMaster(MemberDTO member) throws ShackValidationException, ShackServiceException {
+		try {
+
+			validateMemberProfile(member);
+
+			MemberMaster existingEntity = validateMember(member.getMemberProfile());
+			
+			MemberMaster newEntity = createMemberEntity(member);
+			
+			updateMember(existingEntity, member, newEntity);
+			
+			return new MemberSuccess(newEntity.getMmid());
+
+		} catch (ShackValidationException sve) {
+			LOGGER.error("validation error occured in updateMemberMaster", sve);
+			throw sve;
+		} catch (Exception e) {
+			LOGGER.error("Error occured in updateMemberMaster", e);
+			throw new ShackServiceException(ShackResourceConstants.ERROR_CODE_ADD_MEMBER,
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBER_MSG, e);
+		}
 	}
-	
+
 	/**
 	 * 
 	 * @param member
@@ -116,7 +133,8 @@ public class ShackRegistrationService implements IShackRegistrationService {
 	 * @throws ShackDAOException
 	 * @throws ShackServiceException
 	 */
-	public MemberMaster createMemberEntity(MemberDTO member) throws ShackValidationException , ShackDAOException , ShackServiceException{
+	public MemberMaster createMemberEntity(MemberDTO member)
+			throws ShackValidationException, ShackDAOException, ShackServiceException {
 		/**
 		 * First validate the channels and site before proceeding
 		 */
@@ -129,73 +147,97 @@ public class ShackRegistrationService implements IShackRegistrationService {
 
 		memberMaster.setSiteMaster(siteMaster);
 		memberMaster.setChannel(channel);
-		
-		return memberMaster ;
+
+		return memberMaster;
 	}
-	
+
 	/**
 	 * 
 	 * @param member
 	 * @throws ShackValidationException
 	 * @throws ShackDAOException
 	 */
-	private void validateMemberProfile(MemberDTO member , OperationType operationType) throws ShackValidationException , ShackDAOException {
-		
-		/**
-		 * Validate the member for the update operation 
-		 */		
-		validateMember(operationType, member.getMemberProfile());
-		
+	private void validateMemberProfile(MemberDTO member) throws ShackValidationException, ShackDAOException {
+
 		/**
 		 * validate the member profile
 		 */
 		validationhelper.validateMemberProfile(member);
-		
+
 		/**
 		 * validate the parent member profile
 		 */
 		validateParentMember(member.getMemberProfile());
 	}
-	
+
 	/**
 	 * 
 	 * @param memberProfile
 	 * @throws ShackValidationException
 	 * @throws ShackDAOException
 	 */
-	private void validateParentMember(MemberProfileDTO memberProfile) throws ShackValidationException , ShackDAOException {		
-		if(memberProfile.getParentMemberId() !=null && memberProfile.getParentMemberId() > 0) {
-			MemberMaster parentMember = memberDAO.findMemberById(memberProfile.getParentMemberId()) ;
-			if(parentMember == null) {
+	private void validateParentMember(MemberProfileDTO memberProfile)
+			throws ShackValidationException, ShackDAOException {
+		if (memberProfile.getParentMemberId() != null && memberProfile.getParentMemberId() > 0) {
+			MemberMaster parentMember = memberDAO.findMemberById(memberProfile.getParentMemberId());
+			if (parentMember == null) {
 				throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
 						ShackResourceConstants.ERROR_CODE_ADD_PARENT_MEMBEPER_NOT_IN_SYSTEM);
 			}
-		}		
+		}
+	}
+
+	/**
+	 * 
+	 * @param memberProfile
+	 * @throws ShackValidationException
+	 * @throws ShackDAOException
+	 */
+	private MemberMaster validateMember(MemberProfileDTO memberProfile)
+			throws ShackValidationException, ShackDAOException {
+
+		if (memberProfile.getMemberId() == null || memberProfile.getMemberId() <= 0) {
+
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_UPDATE_MEMBERID);
+		}
+
+		MemberMaster selectedMember = memberDAO.findMemberById(memberProfile.getMemberId());
+
+		if (selectedMember == null) {
+			throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
+					ShackResourceConstants.ERROR_CODE_ADD_MEMBEPER_NOT_IN_SYSTEM);
+		}
+
+		return selectedMember;
 	}
 	
 	/**
 	 * 
-	 * @param operationType
-	 * @param memberProfile
-	 * @throws ShackValidationException
-	 * @throws ShackDAOException
+	 * @param memberMaster
+	 * @param member
 	 */
-	private void validateMember(OperationType operationType, MemberProfileDTO memberProfile)
-			throws ShackValidationException, ShackDAOException {
+	private void updateMember(MemberMaster existingEntity , MemberDTO member , MemberMaster newEntity) {
 		
-		if (OperationType.UPDATE == operationType) {
-			if (memberProfile.getMemberId() == null || memberProfile.getMemberId() <= 0) {
-
-				throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
-						ShackResourceConstants.ERROR_CODE_UPDATE_MEMBERID);
-			}
-
-			MemberMaster selectedMember = memberDAO.findMemberById(memberProfile.getMemberId());
+		newEntity.setMmid(existingEntity.getMmid());
+		
+		/**
+		 * 1 - if option selected tag is not present, meaning no change
+		 * to the existing data. No need to perform any DB operation for the option selected
+		 */
+		
+		if (member.getMemberDetails() !=null && member.getMemberDetails().getOptInSelected() !=null) {
+			/**
+			 * 2 - If the option selected tag is present. Need to update the existing data.
+			 */
+									
+			//List<OptIn> existingOptinsList = memberMaster.getOptIns() ;
 			
-			if (selectedMember == null) {
-				throw new ShackValidationException(ShackResourceConstants.ERROR_CODE_INPUT_VALIDATION,
-						ShackResourceConstants.ERROR_CODE_ADD_MEMBEPER_NOT_IN_SYSTEM);
-			}
+			LOGGER.info("option seletced tag is present");
+			
+			if (member.getMemberDetails().getOptInSelected().isEmpty()) {
+				//memberMaster.set
+			} 
 		}
 	}
 }

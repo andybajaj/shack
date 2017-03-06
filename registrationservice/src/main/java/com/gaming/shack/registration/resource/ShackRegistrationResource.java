@@ -72,7 +72,7 @@ public class ShackRegistrationResource implements IShackRegistrationResource {
 			throws ShackValidationException, ShackResourceException {
 		try {
 			LOGGER.info("addMemberMaster api called");
-			MemberSuccess member = shackRegistrationService.addMemberMaster(memberIn) ; 
+			MemberSuccess member = shackRegistrationService.updateMemberMaster(memberIn) ; 
 			
 			ItemList<MemberSuccess> items = new ItemList<MemberSuccess>();			
 			items.setItems(member);
