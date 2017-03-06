@@ -134,15 +134,9 @@ public class OptIn implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((acceptedDate == null) ? 0 : acceptedDate.hashCode());
-		result = prime * result + ((createBy == null) ? 0 : createBy.hashCode());
-		result = prime * result + ((createDate == null) ? 0 : createDate.hashCode());
-		result = prime * result + ((memberMaster == null) ? 0 : memberMaster.hashCode());
-		result = prime * result + ((opid == null) ? 0 : opid.hashCode());
+		result = prime * result + ((memberMaster.getMmid() == null) ? 0 : memberMaster.getMmid().hashCode());
 		result = prime * result + ((optTypeID == null) ? 0 : optTypeID.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((updateBy == null) ? 0 : updateBy.hashCode());
-		result = prime * result + ((updateDate == null) ? 0 : updateDate.hashCode());
 		return result;
 	}
 
@@ -155,30 +149,10 @@ public class OptIn implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		OptIn other = (OptIn) obj;
-		if (acceptedDate == null) {
-			if (other.acceptedDate != null)
-				return false;
-		} else if (!acceptedDate.equals(other.acceptedDate))
-			return false;
-		if (createBy == null) {
-			if (other.createBy != null)
-				return false;
-		} else if (!createBy.equals(other.createBy))
-			return false;
-		if (createDate == null) {
-			if (other.createDate != null)
-				return false;
-		} else if (!createDate.equals(other.createDate))
-			return false;
 		if (memberMaster == null) {
 			if (other.memberMaster != null)
 				return false;
-		} else if (!memberMaster.equals(other.memberMaster))
-			return false;
-		if (opid == null) {
-			if (other.opid != null)
-				return false;
-		} else if (!opid.equals(other.opid))
+		} else if (!memberMaster.getMmid().equals(other.memberMaster.getMmid()))
 			return false;
 		if (optTypeID == null) {
 			if (other.optTypeID != null)
@@ -190,18 +164,10 @@ public class OptIn implements Serializable {
 				return false;
 		} else if (!status.equals(other.status))
 			return false;
-		if (updateBy == null) {
-			if (other.updateBy != null)
-				return false;
-		} else if (!updateBy.equals(other.updateBy))
-			return false;
-		if (updateDate == null) {
-			if (other.updateDate != null)
-				return false;
-		} else if (!updateDate.equals(other.updateDate))
-			return false;
 		return true;
 	}
+
+	
 	
 	
 }

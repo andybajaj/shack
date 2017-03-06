@@ -77,8 +77,7 @@ public class MemberMasterDAO extends ShackBaseDao<MemberMaster, Serializable>
 	}
 
 	@Override
-	public MemberMaster findMemberByCardBarCode(Long barCode) throws ShackDAOException {
-		
+	public MemberMaster findMemberByCardBarCode(Long barCode) throws ShackDAOException {		
 		try {
 			EntityManager em = getEntityManager(DataSourceType.SHACK);
 			Query query = em.createNamedQuery("Member.findMemberByCardBarCode");
@@ -90,5 +89,20 @@ public class MemberMasterDAO extends ShackBaseDao<MemberMaster, Serializable>
 			throw new ShackDAOException("MEM_DAO_ERR", "exception in findMemberByEmail", e);
 		}
 	}
+
+	@Override
+	public int deleteOptinsByMMId(Long mmId) throws ShackDAOException {		
+		try {
+			EntityManager em = getEntityManager(DataSourceType.SHACK);
+			Query query = em.createNamedQuery("Member.deleteOptinsByMMId");
+			query.setParameter("mmId", mmId);
+			return query.executeUpdate() ;
+
+		} catch (Exception e) {
+			throw new ShackDAOException("MEM_DAO_ERR", "exception in deleteOptinsByMMId", e);
+		}
+
+	}
 		
+	
 }

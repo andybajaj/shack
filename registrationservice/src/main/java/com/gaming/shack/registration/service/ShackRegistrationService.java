@@ -217,7 +217,7 @@ public class ShackRegistrationService implements IShackRegistrationService {
 	 * @param memberMaster
 	 * @param member
 	 */
-	private void updateMember(MemberMaster existingEntity , MemberDTO member , MemberMaster newEntity) {
+	private void updateMember(MemberMaster existingEntity , MemberDTO member , MemberMaster newEntity) throws ShackDAOException {
 		
 		newEntity.setMmid(existingEntity.getMmid());
 		
@@ -230,14 +230,39 @@ public class ShackRegistrationService implements IShackRegistrationService {
 			/**
 			 * 2 - If the option selected tag is present. Need to update the existing data.
 			 */
-									
-			//List<OptIn> existingOptinsList = memberMaster.getOptIns() ;
-			
+												
 			LOGGER.info("option seletced tag is present");
 			
 			if (member.getMemberDetails().getOptInSelected().isEmpty()) {
-				//memberMaster.set
-			} 
+				memberDAO.deleteOptinsByMMId(newEntity.getMmid()) ;
+			} else {
+				List<OptIn> existingOptinsList = existingEntity.getOptIns() ;
+				
+				if (existingOptinsList !=null && !existingOptinsList.isEmpty()) {
+					
+					if (newEntity.getOptIns().equals(existingEntity.getOptIns())) {
+						
+						newEntity.setOptIns(null);
+					} else {
+						//List<OptIn> mergedOptinsList = getMergedOptinsList(newEntity.getOptIns() , existingEntity.getOptIns());
+					}
+				}
+			}
 		}
+		
+		memberDAO.update(newEntity) ;
 	}
+	
+	/**
+	 * 
+	 * @param newOptIns
+	 * @param existingOptIns2
+	 * @return
+	 */
+	/*private List<OptIn> getMergedOptinsList(List<OptIn> newOptIns, List<OptIn> existingOptIns) {
+		List<OptIn>
+		for (OptIn existingOptin : existingOptIns) {
+			
+		}
+	}*/
 }

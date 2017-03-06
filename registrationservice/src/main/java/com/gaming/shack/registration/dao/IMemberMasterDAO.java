@@ -36,4 +36,12 @@ public interface IMemberMasterDAO<T, I extends Serializable> extends IShackBaseD
 	 */
 	public MemberMaster findMemberByCardBarCode(Long barCode) throws ShackDAOException;
 	
+	/**
+	 * 
+	 * @param barCode
+	 * @return
+	 * @throws ShackDAOException
+	 */
+	public int deleteOptinsByMMId(Long mmId) throws ShackDAOException;
+	
 }
