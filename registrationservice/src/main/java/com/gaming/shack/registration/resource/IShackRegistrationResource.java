@@ -50,5 +50,15 @@ public interface IShackRegistrationResource {
 	@Path("/addmembermaster")
 	public ItemList<MemberSuccess> addMemberMaster(MemberDTO member) throws ShackValidationException , ShackResourceException ; 
 	
-
+	/**
+	 * The service will be used to update the member master
+	 * @param member
+	 * @return
+	 * @throws ShackValidationException
+	 * @throws ShackResourceException
+	 */
+	@POST
+	@Path("/updatemembermaster")
+	public ItemList<MemberSuccess> updateMemberMaster(MemberDTO member) throws ShackValidationException , ShackResourceException ;
+	
 }

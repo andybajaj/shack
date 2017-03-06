@@ -66,4 +66,23 @@ public class ShackRegistrationResource implements IShackRegistrationResource {
 		}
 	
 	}
+
+	@Override
+	public ItemList<MemberSuccess> updateMemberMaster(MemberDTO memberIn)
+			throws ShackValidationException, ShackResourceException {
+		try {
+			LOGGER.info("addMemberMaster api called");
+			MemberSuccess member = shackRegistrationService.addMemberMaster(memberIn) ; 
+			
+			ItemList<MemberSuccess> items = new ItemList<MemberSuccess>();			
+			items.setItems(member);
+			return items;
+						
+		} catch(ShackValidationException sve) {
+			throw sve ;
+		} 
+		catch(Exception e) {			
+			throw new ShackResourceException("101", "Error in addMemberMaster" ,e);
+		}
+	}
 }

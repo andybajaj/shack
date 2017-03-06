@@ -18,6 +18,7 @@ import com.gaming.shack.core.exception.ShackValidationException;
 import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.entity.registration.SiteMaster;
+import com.gaming.shack.data.enums.OperationType;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.MemberSuccess;
@@ -67,7 +68,7 @@ public class ShackRegistrationService implements IShackRegistrationService {
 		try {
 			return shackResgistrationDao.findAllUser();
 		} catch (ShackDAOException e) {
-			throw new ShackServiceException("101", "exception in find all users");
+			throw new ShackServiceException("101", "exception in find all users" , e);
 		}
 	}
 
@@ -75,20 +76,21 @@ public class ShackRegistrationService implements IShackRegistrationService {
 	@ShackRTX
 	public MemberSuccess addMemberMaster(MemberDTO member) throws ShackValidationException, ShackServiceException {
 		try {
+			
 			/**
-			 * The advanced validations will be added here
+			 * Validate member profile
 			 */
-			validationhelper.validateMemberProfile(member);
-
-			SiteMaster siteMaster = siteMasterDAO.findById(member.getMemberProfile().getPreferredSite());
-			Channel channel = channelDAO.findChannelById(member.getMemberProfile().getChannelId());
-
-			validationhelper.validateSiteAndChannel(siteMaster, channel);
-			validateParentMember(member.getMemberProfile());
+			
+			validateMemberProfile(member , OperationType.ADD);
 			
 			/**
 			 * Validate the channels and site before proceeding
 			 */
+			SiteMaster siteMaster = siteMasterDAO.findById(member.getMemberProfile().getPreferredSite());
+			Channel channel = channelDAO.findChannelById(member.getMemberProfile().getChannelId());
+			
+			validationhelper.validateSiteAndChannel(siteMaster, channel);
+			
 			MemberMaster memberMaster = registrationHelper.createMemberMaster(member);
 
 			memberMaster.setSiteMaster(siteMaster);
@@ -111,6 +113,25 @@ public class ShackRegistrationService implements IShackRegistrationService {
 
 		return null;
 	}
+			
+	/**
+	 * 
+	 * @param member
+	 * @throws ShackValidationException
+	 * @throws ShackDAOException
+	 */
+	private void validateMemberProfile(MemberDTO member , OperationType operationType) throws ShackValidationException , ShackDAOException {
+		
+		/**
+		 * Validate the member profile
+		 */
+		validationhelper.validateMemberProfile(member);
+		
+		/**
+		 * validate the parent member profile
+		 */
+		validateParentMember(member.getMemberProfile());
+	}
 	
 	/**
 	 * 
@@ -128,4 +149,9 @@ public class ShackRegistrationService implements IShackRegistrationService {
 		}		
 	}
 
+	@Override
+	public MemberSuccess updateMemberMaster(MemberDTO member) throws ShackValidationException, ShackServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

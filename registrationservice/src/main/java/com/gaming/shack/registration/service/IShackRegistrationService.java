@@ -34,5 +34,14 @@ public interface IShackRegistrationService {
 	public MemberSuccess addMemberMaster(MemberDTO member)
 			throws ShackValidationException, ShackServiceException; 
 	
+	/**
+	 * 
+	 * @param member
+	 * @return
+	 * @throws ShackValidationException
+	 * @throws ShackServiceException
+	 */
+	public MemberSuccess updateMemberMaster(MemberDTO member)
+			throws ShackValidationException, ShackServiceException; 
 
 }
