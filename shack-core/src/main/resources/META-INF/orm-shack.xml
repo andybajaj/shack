@@ -64,10 +64,16 @@
      	</query>
 	</named-query>
 	
-	<!-- <named-query name="Member.deleteOptinsByMMId">
+	<named-query name="Member.deleteOptinsByMMId">
 		<query>
 		  delete from OptIn opt where opt.memberMaster.mmid=:mmId
      	</query>
-	</named-query> -->
+	</named-query>
 	
+	<named-query name="Member.updateOptinsStatus">
+		<query>
+		  update OptIn opt set opt.status = :status where opt.opid in (:optinIds)
+     	</query>
+	</named-query>
+		
 </entity-mappings>
