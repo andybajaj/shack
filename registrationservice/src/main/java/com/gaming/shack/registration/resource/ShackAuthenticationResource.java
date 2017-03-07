@@ -84,5 +84,33 @@ public class ShackAuthenticationResource implements IShackAuthenticationResource
 		return Collections.emptyList();
 		
 	}
+	
+	@Override
+	public List<String> notifyMemberActivation(LoginBaseDTO loginBaseDTO) throws ShackResourceException {
+		
+		try{
+		
+			authenticationService.notifyMemberActivation(loginBaseDTO);
+			
+		}catch (ShackServiceException e) {
+			throw new ShackResourceException("115", "Error in notifyMemberActivation");
+		}
+		
+		return Collections.emptyList();
+	}
+	
+	@Override
+	public List<String> activateMemberProfile(String trackingID) throws ShackResourceException{
+		
+		try{
+			
+			authenticationService.activateMemberProfile(trackingID);
+			
+		}catch (ShackServiceException e) {
+			throw new ShackResourceException("116", "Error in activateMemberProfile");
+		}
+		
+		return Collections.emptyList();
+	}
 
 }

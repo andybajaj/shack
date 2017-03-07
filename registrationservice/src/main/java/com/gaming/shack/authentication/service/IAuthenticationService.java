@@ -15,4 +15,6 @@ public interface IAuthenticationService {
 	public void forgotPassword(LoginBaseDTO logindt) throws ShackServiceException, ShackValidationException;
 	public PasswordResetResponse resetPasswordPreCheck(String activId) throws ShackServiceException, ShackValidationException;
 	public void resetPassword(PasswordResetRequestDTO loginDTO)throws ShackServiceException, ShackValidationException;
+	public void notifyMemberActivation(LoginBaseDTO logindt) throws ShackServiceException, ShackValidationException;
+	public void activateMemberProfile(String trackingID) throws ShackServiceException, ShackValidationException ;
 }

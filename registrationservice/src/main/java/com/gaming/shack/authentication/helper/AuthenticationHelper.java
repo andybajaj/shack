@@ -57,21 +57,55 @@ public class AuthenticationHelper {
 
 	}
 
-	public static MemberActivation constructMemberActivationEntity(MemberMaster member, String trackingID)
+	public static void validateActivationLinkMemberStatus(MemberStatusEnum memberStatus) throws ShackValidationException {
+
+		if (memberStatus == null) {
+			throw new ShackValidationException("101", "No valid member status found");
+		}
+
+		switch (memberStatus) {
+		case P:
+			throw new ShackValidationException("102", "Member not registererd the online account");
+		case N:
+			throw new ShackValidationException("103", "Member account is in new status");
+		
+		case L:
+			throw new ShackValidationException("104", "Member account is locked");
+		case S:
+			throw new ShackValidationException("105", "Member account is suspended");
+		case NC:
+			break;
+		default:
+
+		}
+
+		}
+
+	
+
+	public static MemberActivation constructMemberActivationEntity(MemberMaster member, String trackingID,boolean isForgotPswd)
 			throws ShackValidationException {
 
 		MemberActivation memberActivation = new MemberActivation();
 		memberActivation.setMemberMaster(member);
-		memberActivation.setActivationType(ShackConstant.ACTIVATION_TYPE_FORG_PSWD);
 		memberActivation.setUniqueID(trackingID);
 		memberActivation.setCreateDate(getCurrentDate());
 		memberActivation.setCreateBy(ShackConstant.CREATED_BY);
-		memberActivation.setValidityMinute(ShackConstant.VALIDITY_MINUTE);
-		memberActivation.setExpiryTime(calculateExpireTime());
+	
+		if(isForgotPswd)
+		{
+			memberActivation.setExpiryTime(calculateExpireTime(ShackConstant.FORGOTPWD_VALIDITY_MINUTE));
+			memberActivation.setActivationType(ShackConstant.ACTIVATION_TYPE.ForgotPWD.toString());
+			memberActivation.setValidityMinute(new Long(ShackConstant.FORGOTPWD_VALIDITY_MINUTE));
+		}else{
+			memberActivation.setExpiryTime(calculateExpireTime(ShackConstant.ACTIVATION_VALIDITY_MINUTE));
+			memberActivation.setActivationType(ShackConstant.ACTIVATION_TYPE.Activation.toString());
+			memberActivation.setValidityMinute(new Long(ShackConstant.ACTIVATION_VALIDITY_MINUTE));
+		}
+		
 		memberActivation.setActivationTime(null);
 		memberActivation.setCreationTime(new Date());
 		memberActivation.setUpdateBy(ShackConstant.CREATED_BY);
-
 		memberActivation.setUpdateDate(getCurrentDate());
 
 		return memberActivation;
@@ -100,7 +134,7 @@ public class AuthenticationHelper {
 
 	}
 
-	public static void poulateMemberActivationForPasswordReset(MemberActivation memActivation)
+	public static void poulateMemberActivationForPasswordResetOrActivation(MemberActivation memActivation)
 			throws ShackValidationException {
 
 		memActivation.setActivationTime(new Date(System.currentTimeMillis()));
@@ -125,12 +159,12 @@ public class AuthenticationHelper {
 
 	}
 
-	public static Timestamp calculateExpireTime() {
+	public static Timestamp calculateExpireTime(int expMinute) {
 
 		// 1) create a java calendar instance
 		Calendar calendar = Calendar.getInstance();
 
-		calendar.add(Calendar.MINUTE, 30);
+		calendar.add(Calendar.MINUTE, expMinute);
 
 		// 2) get a java.util.Date from the calendar instance.
 		// this date will represent the current instant, or "now".

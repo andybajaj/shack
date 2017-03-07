@@ -140,7 +140,7 @@ public class AuthenticationService implements IAuthenticationService {
 
 			// 3. add new record in member activity table with unique key.
 			String trackingID = UUID.randomUUID().toString();
-			MemberActivation memberActivtion = AuthenticationHelper.constructMemberActivationEntity(member, trackingID);
+			MemberActivation memberActivtion = AuthenticationHelper.constructMemberActivationEntity(member, trackingID,true);
 			authDAO.add(memberActivtion);
 
 			// 4. send notification
@@ -246,7 +246,7 @@ public class AuthenticationService implements IAuthenticationService {
 			AuthenticationHelper.populateMemberMasterForPasswordReset(memMaster);
 			MemberAccount memAccount =  memMaster.getMemberAccount();
 			AuthenticationHelper.poulateMemberAccountForPasswordReset(memAccount, resetRequestDTO.getPasscode());
-			AuthenticationHelper.poulateMemberActivationForPasswordReset(memberActivation);
+			AuthenticationHelper.poulateMemberActivationForPasswordResetOrActivation(memberActivation);
 			
 			//update activating time to current time
 			authDAO.update(memberActivation);
@@ -258,6 +258,102 @@ public class AuthenticationService implements IAuthenticationService {
 
 		} catch (ShackDAOException e) {
 			throw new ShackServiceException("AUTH_SERV_ERR", "exception in resetPasswordPreCheck");
+		}
+
+		
+	}
+	
+	
+	@ShackRTX
+	@Override
+	public void notifyMemberActivation(LoginBaseDTO logindt) throws ShackServiceException, ShackValidationException {
+
+		try {
+
+			MemberMaster member = null;
+
+			// 1. check if the input ID is valid.
+			String loginorEmailID = logindt.getId();
+			boolean isId = StringUtils.isNumeric(loginorEmailID);
+
+			if (isId) {
+				Long id = new Long(loginorEmailID);
+				member = authDAO.findMemberById(id);
+
+			} else {
+				member = authDAO.findMemberByEmailID(loginorEmailID);
+			}
+
+			if (member == null) {
+				throw new ShackValidationException("100", "given member id or email not found");
+			}
+
+			// 2. check member status and throw error if not "NC" status and update status as "A"
+			MemberStatusEnum memberStatus = member.getMemberStatus();
+			AuthenticationHelper.validateActivationLinkMemberStatus(memberStatus);
+			
+			// 3. add new record in member activity table with unique key.
+			String trackingID = UUID.randomUUID().toString();
+			MemberActivation memberActivtion = AuthenticationHelper.constructMemberActivationEntity(member, trackingID,false);
+			authDAO.add(memberActivtion);
+
+			// 4. send notification
+
+		} catch (ShackDAOException e) {
+			throw new ShackServiceException("AUTH_SERV_ERR", "exception in notifyMemberActivation service");
+		}
+	}
+	
+	
+	@ShackRTX
+	@Override
+	public void activateMemberProfile(String trackingID)
+			throws ShackServiceException, ShackValidationException {
+
+		try {
+
+			// 1. check if activation ID exist
+			MemberActivation memberActivation = authDAO.findMemberActivByUniqueId(trackingID);
+
+			if (memberActivation == null) {
+				throw new ShackValidationException("120", "given activation id not found");
+			}
+
+			// 2. check for valid member
+			MemberMaster memMaster = memberActivation.getMemberMaster();
+
+			if (memMaster == null) {
+				throw new ShackValidationException("121", "For the given activation id ,member id not found");
+			}
+
+			// 3. validate member status
+			AuthenticationHelper.validateActivationLinkMemberStatus(memMaster.getMemberStatus());
+
+			// 4. check if the given tracking id was used already
+			if(memberActivation.getActivationTime() !=null){
+				throw new ShackValidationException("122", "This activatin link has been used already");
+			}
+			
+			// 5. Validate the activation request expiration time
+			Date expTime = memberActivation.getExpiryTime();
+
+			if (expTime.before(new Date(System.currentTimeMillis()))) {
+				throw new ShackValidationException("123", "Activation id is expired");
+			}
+			
+			// 6. update member status to "ACTIVE"
+			memMaster.setMemberStatus(MemberStatusEnum.A);
+			memMaster.setUpdateDate(AuthenticationHelper.getCurrentDate());
+			authDAO.update(memMaster);
+			
+			//7. update activation time
+			AuthenticationHelper.poulateMemberActivationForPasswordResetOrActivation(memberActivation);
+			authDAO.update(memberActivation);
+			
+			//8. send notification
+
+		} catch (ShackDAOException e) {
+			throw new ShackServiceException("AUTH_SERV_ERR", "exception in activateMemberProfile");
 		}
 
 		

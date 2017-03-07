@@ -66,5 +66,23 @@ public interface IShackAuthenticationResource {
 			@ApiResponse(code = 412, message = "business fields validation error?"),
 			@ApiResponse(code = 500, message = "application system error?")})
 	public List<String> resetPassword(PasswordResetRequestDTO loginDTO) throws ShackResourceException ;
+	
+	
+	@POST
+	@Path("/notifymemberactivation")
+	@ApiOperation(value = "Shack API to for  notify MemberActivation", notes = "This is a shack Endpoint to MemberActivation")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success Response from API"),
+			@ApiResponse(code = 400, message = "Input fields validation error?"),
+			@ApiResponse(code = 412, message = "business fields validation error?"),
+			@ApiResponse(code = 500, message = "application system error?")})
+	public List<String> notifyMemberActivation(LoginBaseDTO loginBaseDTO) throws ShackResourceException ;
 
+	@PUT
+	@Path("/activatemember/{trackingid}")
+	@ApiOperation(value = "Shack API to activate the member profile", notes = "This is a shack Endpoint to activate member")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success Response from API"),
+			@ApiResponse(code = 400, message = "Input fields validation error?"),
+			@ApiResponse(code = 412, message = "business fields validation error?"),
+			@ApiResponse(code = 500, message = "application system error?")})
+	public List<String> activateMemberProfile(@PathParam("trackingid") String trackingID) throws ShackResourceException;
 }
