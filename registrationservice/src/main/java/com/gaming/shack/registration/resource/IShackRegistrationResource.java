@@ -19,6 +19,9 @@ import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberSuccess;
 import com.gaming.shack.data.model.UserDTO;
 
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Interface IShackRegistrationResource.
@@ -48,6 +51,12 @@ public interface IShackRegistrationResource {
 	 */
 	@POST
 	@Path("/addmembermaster")
+	//ApiOperation(value = "Shack API for add member", notes = "This is a shack Endpoint add member")  
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success Response from API"),  
+	@ApiResponse(code = 400, message = "Input fields validation error?"),  
+	@ApiResponse(code = 412, message = "business fields validation error?"),  
+	@ApiResponse(code = 500, message = "application system error?")})  
+
 	public ItemList<MemberSuccess> addMemberMaster(MemberDTO member) throws ShackValidationException , ShackResourceException ; 
 	
 	/**
@@ -59,6 +68,12 @@ public interface IShackRegistrationResource {
 	 */
 	@POST
 	@Path("/updatemembermaster")
+	//ApiOperation(value = "Shack API for update member", notes = "This is a shack Endpoint update member")  
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success Response from API"),  
+	@ApiResponse(code = 400, message = "Input fields validation error?"),  
+	@ApiResponse(code = 412, message = "business fields validation error?"),  
+	@ApiResponse(code = 500, message = "application system error?")})  
+
 	public ItemList<MemberSuccess> updateMemberMaster(MemberDTO member) throws ShackValidationException , ShackResourceException ;
 	
 }

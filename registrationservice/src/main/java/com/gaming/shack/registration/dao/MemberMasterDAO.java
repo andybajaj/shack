@@ -1,6 +1,7 @@
 package com.gaming.shack.registration.dao;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -102,6 +103,20 @@ public class MemberMasterDAO extends ShackBaseDao<MemberMaster, Serializable>
 			throw new ShackDAOException("MEM_DAO_ERR", "exception in deleteOptinsByMMId", e);
 		}
 
+	}
+
+	@Override
+	public int updateOptinsStatus(List<Long> optinsIds , String status) throws ShackDAOException {
+		try {
+			EntityManager em = getEntityManager(DataSourceType.SHACK);
+			Query query = em.createNamedQuery("Member.updateOptinsStatus");
+			query.setParameter("status", status);
+			query.setParameter("optinIds", optinsIds);
+			return query.executeUpdate() ;
+
+		} catch (Exception e) {
+			throw new ShackDAOException("MEM_DAO_ERR", "exception in updateOptinsStatus", e);
+		}
 	}
 		
 	

@@ -3,6 +3,8 @@
  */
 package com.gaming.shack.registration.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,7 +21,6 @@ import com.gaming.shack.data.entity.registration.Channel;
 import com.gaming.shack.data.entity.registration.MemberMaster;
 import com.gaming.shack.data.entity.registration.OptIn;
 import com.gaming.shack.data.entity.registration.SiteMaster;
-import com.gaming.shack.data.enums.OperationType;
 import com.gaming.shack.data.model.MemberDTO;
 import com.gaming.shack.data.model.MemberProfileDTO;
 import com.gaming.shack.data.model.MemberSuccess;
@@ -244,7 +245,12 @@ public class ShackRegistrationService implements IShackRegistrationService {
 						
 						newEntity.setOptIns(null);
 					} else {
-						//List<OptIn> mergedOptinsList = getMergedOptinsList(newEntity.getOptIns() , existingEntity.getOptIns());
+						List<OptIn> newActiveOptionsList = getQualifiedActiveOptionsList(newEntity.getOptIns() , existingEntity.getOptIns());
+						if (newActiveOptionsList == null || newActiveOptionsList.isEmpty()) {
+							newEntity.setOptIns(null);
+						} else {
+							newEntity.setOptIns(newActiveOptionsList);
+						}
 					}
 				}
 			}
@@ -254,15 +260,36 @@ public class ShackRegistrationService implements IShackRegistrationService {
 	}
 	
 	/**
-	 * 
+	 * `
 	 * @param newOptIns
 	 * @param existingOptIns2
 	 * @return
 	 */
-	/*private List<OptIn> getMergedOptinsList(List<OptIn> newOptIns, List<OptIn> existingOptIns) {
-		List<OptIn>
-		for (OptIn existingOptin : existingOptIns) {
-			
+	private List<OptIn> getQualifiedActiveOptionsList(List<OptIn> newOptIns, List<OptIn> existingOptIns) throws ShackDAOException {
+		
+		List<OptIn> activeOptionsList = new ArrayList<OptIn>() ;
+		
+		List<Long> inactiveOptionsList = new ArrayList<Long>() ;
+		
+		for (OptIn newOptin : existingOptIns) {
+			if (existingOptIns == null || !existingOptIns.contains(newOptin)) {
+				activeOptionsList.add(newOptin) ;
+			}
 		}
-	}*/
+		
+		if (existingOptIns !=null && !existingOptIns.isEmpty()) {
+			existingOptIns.removeAll(newOptIns) ;
+			if (!existingOptIns.isEmpty()) {
+				for (OptIn existOptin : existingOptIns) {
+					inactiveOptionsList.add(existOptin.getOpid()) ;
+				}
+			}
+		}
+		
+		if (!inactiveOptionsList.isEmpty()) {
+			memberDAO.updateOptinsStatus(inactiveOptionsList, "I") ;
+		}
+		
+		return activeOptionsList ; 
+	}
 }

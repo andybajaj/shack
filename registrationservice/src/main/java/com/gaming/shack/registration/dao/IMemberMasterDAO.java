@@ -1,6 +1,7 @@
 package com.gaming.shack.registration.dao;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.gaming.shack.core.dao.IShackBaseDao;
 import com.gaming.shack.core.exception.ShackDAOException;
@@ -38,10 +39,18 @@ public interface IMemberMasterDAO<T, I extends Serializable> extends IShackBaseD
 	
 	/**
 	 * 
-	 * @param barCode
+	 * @param mmId
 	 * @return
 	 * @throws ShackDAOException
 	 */
 	public int deleteOptinsByMMId(Long mmId) throws ShackDAOException;
+	
+	/**
+	 * 
+	 * @param optinsIds
+	 * @return
+	 * @throws ShackDAOException
+	 */
+	public int updateOptinsStatus(List<Long> optinsIds ,  String status) throws ShackDAOException;
 	
 }
